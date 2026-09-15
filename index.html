@@ -7,276 +7,1344 @@
   <link rel="stylesheet" href="assets/css/terminal.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=JetBrains+Mono:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="dark-terminal">
-  <!-- Top Navigation & Status Bar -->
+  <!-- Top Navigation Bar -->
   <header class="top-bar">
     <div class="brand-container">
       <div class="brand-icon">🕶️</div>
       <div class="brand-titles">
         <span class="brand-name">MAISON SOLARIS</span>
-        <span class="brand-sub">LUXURY EYEWEAR • MILAN</span>
+        <span class="brand-sub">LUXURY EYEWEAR • MILANO</span>
       </div>
     </div>
     
-    <div class="status-center">
-      <div class="security-level">
-        <span class="pulse-indicator"></span>
-        <span class="status-text">SYSTEM STATUS: <strong class="alert-text">LOCKDOWN ACTIVE</strong></span>
-      </div>
-      <div class="event-title">A/W CAPSULE RUNWAY DEPLOYMENT VAULT</div>
+    <!-- Central Countdown Timer Deck -->
+    <div class="header-timer-deck">
+      <span class="timer-label-mini">T-MINUS</span>
+      <div class="timer-display" id="timer-display">60:00</div>
+      <button id="btn-timer-toggle" class="btn-timer-action" title="Start / Pause Timer">▶ START</button>
+      <button id="btn-add-time" class="btn-timer-action" title="Add 5 minutes">+5M</button>
+      <span class="penalty-pill" id="penalty-log">Penalties: 0m</span>
     </div>
 
-    <div class="session-controls">
-      <button id="btn-sound-toggle" class="icon-btn" title="Toggle Audio Synthesizer">🔊 SOUND ON</button>
-      <button id="btn-reset-session" class="icon-btn reset-btn" title="Reset Escape Room Session">↺ RESET</button>
+    <!-- Header Quick Actions -->
+    <div class="header-actions">
+      <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" class="btn-nav-link" title="Open Google Gemini App in a new tab">
+        <span>💎</span> Gemini App
+      </a>
+      <a href="https://notebooklm.google.com" target="_blank" rel="noopener noreferrer" class="btn-nav-link" title="Open Google NotebookLM in a new tab">
+        <span>📓</span> NotebookLM
+      </a>
+      <button class="btn-nav-link btn-nav-vault" onclick="openDossierModal('gem1_prompt')" title="Browse all dossiers, PDFs, and handouts">
+        <span>📂</span> All Materials
+      </button>
+      <button id="btn-sound-toggle" class="icon-btn" title="Toggle Sound">🔊 SOUND ON</button>
+      <button id="btn-reset-session" class="icon-btn reset-btn" title="Reset Escape Room">↺ RESET</button>
     </div>
   </header>
 
-  <!-- Main Grid Layout -->
-  <main class="terminal-main">
-    
-    <!-- Left Column: Mission Brief & Live Countdown -->
-    <section class="left-panel">
-      <!-- Countdown Timer Deck -->
-      <div class="timer-deck card-glass">
-        <div class="timer-label">T-MINUS UNTIL RUNWAY LAUNCH</div>
-        <div class="timer-display" id="timer-display">60:00</div>
-        <div class="timer-controls">
-          <button id="btn-timer-toggle" class="btn-primary">▶ START MISSION</button>
-          <button id="btn-add-time" class="btn-ghost">+5 MIN</button>
+  <!-- Horizontal Stepper Bar -->
+  <div class="stepper-container">
+    <nav class="stepper-nav">
+      <button class="step-btn active" id="step-btn-1" data-room="1" onclick="switchRoom(1)">
+        <div class="step-meta">
+          <span class="step-num">01</span>
+          <div class="step-info">
+            <span class="step-title">Optical Catalog Specs</span>
+            <span class="step-tech">Gemini Gems • Nano Banana + PDF</span>
+          </div>
         </div>
-        <div class="penalty-log" id="penalty-log">Penalties: 0 min (0 hints used)</div>
+        <span class="step-status">🔒</span>
+      </button>
+
+      <button class="step-btn" id="step-btn-2" data-room="2" onclick="switchRoom(2)">
+        <div class="step-meta">
+          <span class="step-num">02</span>
+          <div class="step-info">
+            <span class="step-title">Bio-Acetate Dossier</span>
+            <span class="step-tech">NotebookLM • Audio Podcast &amp; Q&amp;A</span>
+          </div>
+        </div>
+        <span class="step-status">🔒</span>
+      </button>
+
+      <button class="step-btn" id="step-btn-3" data-room="3" onclick="switchRoom(3)">
+        <div class="step-meta">
+          <span class="step-num">03</span>
+          <div class="step-info">
+            <span class="step-title">PR Fit Crisis</span>
+            <span class="step-tech">Gemini Gems • Brand Safety SOP</span>
+          </div>
+        </div>
+        <span class="step-status">🔒</span>
+      </button>
+
+      <button class="step-btn" id="step-btn-4" data-room="4" onclick="switchRoom(4)">
+        <div class="step-meta">
+          <span class="step-num">04</span>
+          <div class="step-info">
+            <span class="step-title">Runway Master Vault</span>
+            <span class="step-tech">NotebookLM • Slides &amp; Video Gen</span>
+          </div>
+        </div>
+        <span class="step-status">🔒</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Main Escape Room Split Stage -->
+  <main class="terminal-stage">
+
+    <!-- ====================================================================
+         CHAMBER 01 PANEL
+         ==================================================================== -->
+    <section class="room-panel active" id="room-panel-1">
+      <!-- Left: Interactive Workspace & Document Reader -->
+      <div class="workspace-pane">
+        <!-- Fast Actions Shelf -->
+        <div class="fast-actions-shelf">
+          <a href="gem-library/knowledge-pdfs/Maison_Solaris_Technical_Blueprints.pdf" download class="btn-shelf-action btn-shelf-pdf">
+            📥 Download Blueprints PDF
+          </a>
+          <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('gem1_prompt', this)">
+            📋 Copy Gem 01 Instructions
+          </button>
+          <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('raw_specs', this)">
+            📋 Copy Raw Spec #881
+          </button>
+          <button class="btn-shelf-action btn-shelf-view" onclick="openDossierModal('gem1_prompt')">
+            📂 Open Full Dossier Vault
+          </button>
+        </div>
+
+        <!-- In-Workspace Tab Switcher -->
+        <div class="workspace-tabs">
+          <button class="ws-tab-btn active" onclick="switchWsTab(1, 'brief', this)">📋 Mission Brief</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(1, 'specs', this)">⚙️ Raw Factory Spec #881</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(1, 'gem', this)">💎 Gem 01 Instructions</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(1, 'worksheet', this)">📝 Student Worksheet</button>
+        </div>
+
+        <!-- Tab Content 1: Brief -->
+        <div class="ws-tab-content active" id="tab-content-1-brief">
+          <div class="readable-card">
+            <div class="readable-banner">
+              <strong>CRITICAL MISSION:</strong> Unstructured engineering notes for <em>The Solstice Aviator</em> just arrived from Belluno factory. The e-commerce CMS demands high-fashion PDP copy, a photorealistic render using <strong>Nano Banana (Gemini default Image Generation tool)</strong>, and an optical calibration cipher grounded in the internal Blueprints PDF.
+            </div>
+
+            <div class="readable-section">
+              <h4 class="readable-section-title"><span>🛠️</span> STEP-BY-STEP EXECUTION PROTOCOL</h4>
+              <ol class="readable-steps-list">
+                <li>Open <a href="https://gemini.google.com" target="_blank" style="color:var(--gold-accent); font-weight:700;">Gemini App</a> ➔ Gem Manager ➔ Create <strong>Luxury Eyewear Merchandiser Gem</strong>.</li>
+                <li>Copy and paste the <strong>Gem 01 System Instructions</strong> (click button above).</li>
+                <li>In Gem Tools, enable default tool: <strong>Image Generation (Nano Banana)</strong>.</li>
+                <li>Download and upload <code>Maison_Solaris_Technical_Blueprints.pdf</code> as <strong>Knowledge</strong>.</li>
+                <li>Feed the <strong>Raw Factory Engineering Spec #881</strong> into your Gem.</li>
+                <li>Inspect generated copy and the Nano Banana prompt for the aviators on Carrara marble.</li>
+                <li>Assemble the Calibration Cipher using the formula: <code>TITAN-[LENS]-[BRIDGE]-[TENSILE]</code>.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 2: Raw Specs -->
+        <div class="ws-tab-content" id="tab-content-1-specs">
+          <div class="readable-card">
+            <div class="readable-section">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 class="readable-section-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+                  <span>⚙️</span> PROTOTYPE #881 SPECIFICATIONS TABLE
+                </h4>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('raw_specs', this)">📋 Copy Raw Text</button>
+              </div>
+
+              <div class="table-wrapper">
+                <table class="luxury-table">
+                  <thead>
+                    <tr><th>Parameter</th><th>Value</th><th>Component / Standard</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><strong>Model Reference</strong></td><td>Proto-881</td><td><span class="tag-badge tag-gold">SOLSTICE AVIATOR</span></td></tr>
+                    <tr><td><strong>Eye Lens Width (A)</strong></td><td>54 mm</td><td>CR-39 Dark Charcoal Gradient (UV400)</td></tr>
+                    <tr><td><strong>Bridge Gap (DBL)</strong></td><td>18 mm</td><td>Double Wire Bridge</td></tr>
+                    <tr><td><strong>Temple Length</strong></td><td>145 mm</td><td>Ribbed Titanium with Mazzucchelli M49 Tips</td></tr>
+                    <tr><td><strong>Chassis Alloy</strong></td><td>Grade-5 Beta Titanium</td><td>Cold-rolled Belluno Chassis</td></tr>
+                    <tr><td><strong>Filter Category</strong></td><td>Category 3 (CAT3)</td><td>European Standard EN ISO 12312-1</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📄</span> RAW ARTISAN GIANLUCA NOTES</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('raw_specs', this)">📋 Copy</button>
+              </div>
+              <pre class="prompt-code-text">=== MAISON SOLARIS ATELIER DI FABBRICA - BELLUNO ===
+RAW FACTORY LOG: BATCH RUNWAY A/W CAPSULE 
+DATE: 2026-09-15 / STATUS: UNFILTERED
+
+--- ITEM 1: HERO RUNWAY MODEL ---
+Internal Ref: Proto-881_SOLSTICE_AVIATOR
+Notes from Artisan Gianluca:
+&quot;We finished the prototype for the Milan night runway. Pilot aviator double bridge teardrop wire.
+Eye lens width is 54 mm, bridge distance between rims is 18 mm, temples are 145 mm ribbed titanium with Italian bio-acetate tips from Mazzucchelli M49. 
+The main frame chassis is cold-rolled aerospace Grade-5 Beta Titanium cut in Belluno factory. 
+Lenses installed: high-contrast polarized CR-39 sun lenses in dark charcoal gradient with multilayer back anti-reflective coat. 
+UV optical rating is certified UV400, strictly Category 3 (CAT3) under European EN ISO 12312-1 standard (12% visible light transmission).
+Fits square and heart face contours best.&quot;
+
+--- ITEM 2: SECONDARY MODEL ---
+Internal Ref: Proto-882_MILANO_CAT_EYE
+Notes from Artisan Gianluca:
+&quot;Geometric sharp cat-eye cut entirely from 8mm thick slab Mazzucchelli M49 bio-acetate in Havana tortoiseshell.
+Dimensions: lens 51 mm, bridge 20 mm, temple length 140 mm. Standard European fit.
+Lenses: solid warm olive CR-39, Category 3 filter, UV400.
+Recommended for oval and round jawlines.&quot;
+
+--- ITEM 3: TERTIARY MODEL ---
+Internal Ref: Proto-883_PANTOS_MINIMAL
+Notes from Artisan Gianluca:
+&quot;Classic 1950s architectural Pantos round frame with keyhole bridge.
+Dimensions: 48-21-145. Made from combination titanium eyewire and honey bio-acetate brow inserts.
+Lenses: polarized sepia tint, Category 2 filter for afternoon ambient light.&quot;
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 3: Gem Instructions -->
+        <div class="ws-tab-content" id="tab-content-1-gem">
+          <div class="readable-card">
+            <div class="readable-banner">
+              <strong>GEM 01 SETUP:</strong> Paste these system instructions directly into Gemini App Gem Builder. Ensure <strong>Image Generation (Nano Banana)</strong> is enabled and <code>Maison_Solaris_Technical_Blueprints.pdf</code> is uploaded in the Knowledge section.
+            </div>
+
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>💎</span> GEM 01 SYSTEM INSTRUCTIONS</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('gem1_prompt', this)">📋 Copy Instructions</button>
+              </div>
+              <pre class="prompt-code-text"># 💎 Gem 01: Luxury Eyewear Merchandiser &amp; Optical Taxonomy
+
+This is the exact configuration and system instruction to create the **Luxury Eyewear Merchandiser Gem** in Gemini App. It is used in **Chamber 01: The Scrambled Optical Catalog**.
+
+---
+
+## 📋 Gem Configuration Settings
+
+- **Name**: `Maison Solaris Catalog Merchandiser`
+- **Description**: `Expert luxury eyewear e-commerce merchandiser that transforms messy factory specs into evocative PDP copy, generates editorial visual renders with Nano Banana, and calculates optical calibration codes using internal technical blueprints.`
+- **Tone**: `Sophisticated, editorial, precise, luxury Italian craftsmanship.`
+
+### 🛠️ Required Gem Tools &amp; Extensions:
+- [x] **Image Generation (Nano Banana / Gemini Flash Image)**: Enable the default image generation tool so the Gem can render high-resolution product photography concepts.
+- [x] **Workspace / Code Execution** (Optional): Active by default.
+
+### 📁 Required Knowledge Files (Upload into Gem):
+- [x] Upload **`gem-library/knowledge-pdfs/Maison_Solaris_Technical_Blueprints.pdf`** into the **&quot;Knowledge&quot;** section of the Gem.
+
+---
+
+## 📝 Copy-Paste System Instructions (Prompt)
+
+```markdown
+You are the Lead Digital Merchandiser and Master Eyewear Copywriter for Maison Solaris, an elite luxury optical and sunglass house founded in Milan.
+
+### KNOWLEDGE &amp; CITATION BASE
+You have access to the uploaded document: &quot;Maison_Solaris_Technical_Blueprints.pdf&quot;.
+- Strictly reference the Boxing Measurement System (ISO 8624) and Beta-Titanium metallurgical specifications from your knowledge base.
+- When evaluating frame prototypes, extract the Ultimate Tensile Strength in MPa and tensile calibration token from Section 2 of your knowledge base.
+
+### BRAND IDENTITY &amp; VOICE
+- Tone: Understated luxury, poetic yet mathematically precise, architectural, celebrating Belluno craftsmanship, Mazzucchelli bio-acetate, and aerospace-grade titanium.
+- Avoid tacky marketing clichés (do NOT use &quot;unleash&quot;, &quot;game-changer&quot;, &quot;must-have&quot;, &quot;revolutionize&quot;).
+- Embrace sophisticated optical terminology: pantoscopic tilt, bridge geometry, CR-39 clarity, pupillary alignment, and tactile beveling.
+
+### PRIMARY OBJECTIVES
+When provided with raw, unstructured factory engineering notes, manufacturing logs, or rough SKU notes:
+1. Parse all optical dimensions into standardized three-digit optical boxing notation: [Lens Width mm] - [Bridge Width mm] - [Temple Length mm] (e.g., 54-18-145).
+2. Write a luxury e-commerce Product Detail Page (PDP) copy consisting of:
+   - SEO-Optimized Product Title (Format: Maison Solaris - [Model Name] [Silhouette] in [Color/Material])
+   - Editorial Narrative: 2 sensory, evocative paragraphs explaining inspiration, facial harmony, and material provenance.
+   - Ideal Face Shape Harmony: Specific guidance (Square, Heart, Oval, etc.).
+3. Generate an Editorial Visual Concept Prompt for Nano Banana:
+   - Provide an exact visual generation prompt to render a hyper-photorealistic editorial e-commerce photograph of the frame resting on brushed Italian Carrara marble under dramatic Milan runway architectural lighting.
+4. Calculate the Optical Calibration Override Code:
+   - Refer to Section 3 of the uploaded Technical Blueprints PDF.
+   - Formula: TITAN-[LENS]-[BRIDGE]-[TENSILE_TOKEN]
+   - Formula: [ALLOY_PREFIX]-[LENS]-[BRIDGE]-[TENSILE_TOKEN] as specified in Section 3 of the Blueprints PDF.
+
+### DESIRED OUTPUT SCHEMA
+# Maison Solaris - [Model Name]
+[Two Paragraph Editorial Narrative]
+
+**Face Shape Harmony:** [Contour guidance]
+
+### OPTICAL TAXONOMY BLOCK
+- SILHOUETTE: [Frame shape]
+- OPTICAL FIT: [Boxing notation: e.g. 54-18-145]
+- LENS TECH: [Lens specs, polarization, UV rating]
+- ACETATE ORIGIN: [Material provenance]
+- TENSILE STRENGTH: [Value from Knowledge PDF]
+
+### NANO BANANA EDITORIAL VISUAL GENERATION
+[High-fashion visual prompt for the image generation engine]
+
+### VAULT OVERRIDE CALIBRATION CIPHER
+TITAN-[LENS]-[BRIDGE]-[TENSILE_TOKEN]
+```
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 4: Worksheet -->
+        <div class="ws-tab-content" id="tab-content-1-worksheet">
+          <div class="readable-card">
+            <div class="readable-section">
+              <h4 class="readable-section-title"><span>📝</span> DEDUCTION MATRIX (CHAMBER 01)</h4>
+              <div class="table-wrapper">
+                <table class="luxury-table">
+                  <thead>
+                    <tr><th>Parameter</th><th>Source Document</th><th>Deducted Value</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Chassis Prefix</td><td>Blueprints PDF Section 3</td><td><span class="tag-badge tag-gold">TITAN</span></td></tr>
+                    <tr><td>Lens Width (A-dimension)</td><td>Raw Factory Spec #881</td><td><span class="tag-badge tag-cyan">54</span></td></tr>
+                    <tr><td>Bridge Gap (DBL)</td><td>Raw Factory Spec #881</td><td><span class="tag-badge tag-cyan">18</span></td></tr>
+                    <tr><td>Tensile Strength (MPa)</td><td>Blueprints PDF Section 2</td><td><span class="tag-badge tag-emerald">950</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📝</span> FULL STUDENT WORKSHEET TEXT</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('room1_worksheet', this)">📋 Copy</button>
+              </div>
+              <pre class="prompt-code-text"># 📝 Squad Worksheet: Chamber 01 (Hard Mode)
+### Squad Name: _______________________
+### Time Started: _________ | Time Completed: _________
+
+---
+
+## Step 1: Gem Creation &amp; Configuration Check
+- [ ] Created new Gem named: `Maison Solaris Catalog Merchandiser`
+- [ ] System Instructions pasted from `gem-library/01_eyewear_catalog_gem.md`
+- [ ] **Default Tool Enabled**: Image Generation (Nano Banana) toggled ON
+- [ ] **Knowledge Uploaded**: `gem-library/knowledge-pdfs/Maison_Solaris_Technical_Blueprints.pdf`
+
+---
+
+## Step 2: Optical Calibration Deduction
+Inspect your Gem's output after processing Prototype #881 (`The Solstice Aviator`):
+
+| Technical Parameter | Source | Extracted Value |
+| :--- | :--- | :---: |
+| **Chassis Prefix** | Blueprints Section 3 | `[Deduce from Blueprints Section 3]` |
+| **Lens Width (A-dimension mm)** | Factory Spec #881 | `[Extract from Spec #881]` |
+| **Distance Between Lenses / Bridge (DBL mm)** | Factory Spec #881 | `[Extract from Spec #881]` |
+| **Ultimate Tensile Strength (MPa)** | Blueprints Section 2 (Grade-5 Titanium) | `[Deduce from Blueprints Section 2]` |
+
+---
+
+## Step 3: Nano Banana Image Verification
+- [ ] Instructed Gem to generate the editorial image of the frame resting on Italian Carrara marble.
+- [ ] Verified that Nano Banana produced a luxury photo concept rendering the dual-bridge teardrop titanium frame.
+
+---
+
+## Step 4: Assemble the Chamber 01 Calibration Cipher
+
+Assemble the four components separated by hyphens according to Section 3 of the Knowledge PDF:
+
+$$\text{Cipher} = [\text{PREFIX}] - [\text{LENS}] - [\text{BRIDGE}] - [\text{TENSILE}] = \mathbf{TITAN\text{-}54\text{-}18\text{-}950}$$
+
+&gt; 🔑 **CHAMBER 01 OVERRIDE CIPHER**: `TITAN-54-18-950`  
+&gt; *(Alternative accepted: `TITAN-54-18-950TI`)*  
+&gt; Enter this cipher into the Mission Control Console (`index.html`) to unlock Chamber 02!
+</pre>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Live Squad Progress -->
-      <div class="progress-deck card-glass">
-        <h3>SQUAD PROTOCOL PROGRESS</h3>
-        <div class="progress-bar-container">
-          <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;"></div>
-        </div>
-        <div class="progress-stats">
-          <span id="vaults-unlocked-text">0 / 4 Chambers Unlocked</span>
-          <span id="progress-percent-text">0%</span>
-        </div>
-      </div>
+      <!-- Right: Decryption Pad & Deductions -->
+      <div class="decryptor-pane">
+        <div class="decryptor-card">
+          <div class="decryptor-header">
+            <div class="decryptor-badge">CHAMBER 01 • OVERRIDE PROTOCOL</div>
+            <h3 class="decryptor-title">Optical Catalog Calibration</h3>
+          </div>
 
-      <!-- Quick Room Navigation Tabs -->
-      <div class="rooms-nav-deck card-glass">
-        <h3>SECURITY CHAMBERS</h3>
-        <div class="room-nav-list">
-          <button class="nav-room-btn active" data-room="1" id="nav-btn-1">
-            <span class="room-num">01</span>
-            <span class="room-info">
-              <strong>Optical Catalog Specs</strong>
-              <small>Gemini Gems: Structured Taxonomy</small>
-            </span>
-            <span class="lock-status" id="nav-status-1">🔒</span>
-          </button>
 
-          <button class="nav-room-btn" data-room="2" id="nav-btn-2">
-            <span class="room-num">02</span>
-            <span class="room-info">
-              <strong>Bio-Acetate Dossier</strong>
-              <small>NotebookLM: Grounded Citations</small>
-            </span>
-            <span class="lock-status" id="nav-status-2">🔒</span>
-          </button>
 
-          <button class="nav-room-btn" data-room="3" id="nav-btn-3">
-            <span class="room-num">03</span>
-            <span class="room-info">
-              <strong>PR Fit & Sizing Crisis</strong>
-              <small>Gemini Gems: Brand Guardrails</small>
-            </span>
-            <span class="lock-status" id="nav-status-3">🔒</span>
-          </button>
+          <!-- Input Box -->
+          <div class="input-form-box">
+            <label class="input-label" for="cipher-input-1">ENTER CHAMBER 01 CIPHER:</label>
+            <input type="text" id="cipher-input-1" class="cipher-input-field" placeholder="ALLOY-XX-XX-XXX" autocomplete="off" spellcheck="false">
+            <button class="btn-decrypt" onclick="verifyChamber(1)">⚡ DECRYPT CHAMBER 01</button>
+            <div class="feedback-msg" id="feedback-1"></div>
+          </div>
 
-          <button class="nav-room-btn" data-room="4" id="nav-btn-4">
-            <span class="room-num">04</span>
-            <span class="room-info">
-              <strong>Midnight Runway Vault</strong>
-              <small>NotebookLM: Audio Overview & Allocation</small>
-            </span>
-            <span class="lock-status" id="nav-status-4">🔒</span>
-          </button>
+          <!-- Hint System -->
+          <div class="hint-deck">
+            <div class="hint-header">
+              <span class="hint-notice">STUCK? (-3:00 PENALTY PER HINT)</span>
+              <button class="btn-hint-req" onclick="requestHint(1)">REQUEST HINT</button>
+            </div>
+            <div class="hint-display-area" id="hint-display-1"></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Right Column: Interactive Chamber Workstation -->
-    <section class="chamber-workstation card-glass">
-      
-      <!-- Room 1 Workstation -->
-      <div class="room-panel active" id="room-panel-1">
-        <div class="chamber-header">
-          <div class="chamber-badge">CHAMBER 01 • GEMINI APP GEMS</div>
-          <h2>The Scrambled Optical Catalog & Frame Specs</h2>
-          <p class="chamber-desc">
-            The supplier factory delivered unstructured manufacturing logs for the flagship frame: 
-            <em>The Solstice Titanium Aviator</em>. The e-commerce CMS requires an SEO luxury description, 
-            standardized optical fit dimensions (<code>54-18-145</code>), and verified taxonomy tags.
-          </p>
+    <!-- ====================================================================
+         CHAMBER 02 PANEL
+         ==================================================================== -->
+    <section class="room-panel" id="room-panel-2">
+      <!-- Left: Interactive Workspace & Document Reader -->
+      <div class="workspace-pane">
+        <!-- Fast Actions Shelf -->
+        <div class="fast-actions-shelf">
+          <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('source1_mido', this)">
+            📋 Copy Source 1 (MIDO Trend)
+          </button>
+          <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('source2_bioacetate', this)">
+            📋 Copy Source 2 (Bio-Acetate)
+          </button>
+          <button class="btn-shelf-action btn-shelf-view" onclick="openDossierModal('source1_mido')">
+            📂 Open Full Dossier Vault
+          </button>
         </div>
 
-        <div class="mission-instructions">
-          <h4>YOUR OBJECTIVE:</h4>
-          <ol>
-            <li>Open the Gemini App and create the <strong>Luxury Eyewear Merchandiser Gem</strong> using the system prompt in <code>gem-library/01_eyewear_catalog_gem.md</code>.</li>
-            <li>Feed the unstructured raw factory spec from <code>rooms/room-1-frame-chaos/raw_factory_specs.txt</code> into your Gem.</li>
-            <li>Follow the instructions in <code>rooms/room-1-frame-chaos/student_worksheet.md</code> to extract the 5-letter Security Override Key.</li>
-          </ol>
+        <!-- In-Workspace Tab Switcher -->
+        <div class="workspace-tabs">
+          <button class="ws-tab-btn active" onclick="switchWsTab(2, 'brief', this)">📋 Mission Brief</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(2, 'source1', this)">📚 01. MIDO Trend Report</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(2, 'source2', this)">📚 02. Bio-Acetate Lab Audit</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(2, 'tasks', this)">📝 Forensic Tasks &amp; Q&amp;A</button>
         </div>
 
-        <!-- Verification Form -->
-        <div class="code-verification-box">
-          <label for="cipher-input-1">ENTER CHAMBER 01 OVERRIDE CIPHER:</label>
-          <div class="input-group">
-            <input type="text" id="cipher-input-1" placeholder="e.g. KEYWORD" autocomplete="off" spellcheck="false">
-            <button class="btn-unlock" onclick="verifyChamber(1)">VERIFY CIPHER</button>
+        <!-- Tab Content 1: Brief -->
+        <div class="ws-tab-content active" id="tab-content-2-brief">
+          <div class="readable-card">
+            <div class="readable-banner">
+              <strong>REGULATORY LOCKDOWN:</strong> European optical compliance inspectors halted runway preparations! They suspect biodegradable frames and high-intensity runway spotlight lenses breach CE safety directives. You must use <strong>NotebookLM</strong> to ingest both forensic sources, generate an <strong>Audio Overview (AI Podcast)</strong> to listen for compliance debates, and query the chat to extract the audit cipher.
+            </div>
+
+            <div class="readable-section">
+              <h4 class="readable-section-title"><span>🔬</span> STEP-BY-STEP FORENSIC INVESTIGATION</h4>
+              <ol class="readable-steps-list">
+                <li>Open <a href="https://notebooklm.google.com" target="_blank" style="color:var(--gold-accent); font-weight:700;">NotebookLM</a> ➔ Create notebook: <em>"Maison Solaris Compliance"</em>.</li>
+                <li>Add two text sources: paste <strong>Source 1 (MIDO Trend)</strong> and <strong>Source 2 (Bio-Acetate Audit)</strong>.</li>
+                <li>In NotebookLM Studio, generate an <strong>Audio Overview (Podcast)</strong>.</li>
+                <li>Listen to the hosts analyze industrial composting tests and runway spotlight standards.</li>
+                <li>In NotebookLM Chat, ask targeted forensic questions:
+                  <ul>
+                    <li><em>"What ISO standard governs the industrial composting test for M49 bio-acetate?"</em></li>
+                    <li><em>"What is the certified spectroscopic batch code for the A/W shipment?"</em></li>
+                    <li><em>"Under EN ISO 12312-1, what solar filter category is required for runway spotlights?"</em></li>
+                  </ul>
+                </li>
+                <li>Assemble the Audit Cipher: <code>[ISO_STANDARD]-[BATCH_CODE]-[FILTER_CAT]</code>.</li>
+              </ol>
+            </div>
           </div>
-          <div class="feedback-msg" id="feedback-1"></div>
         </div>
 
-        <!-- Hint System -->
-        <div class="hint-container">
-          <div class="hint-header">
-            <span>NEED ASSISTANCE? (Costs -3:00 per hint)</span>
-            <button class="btn-hint" onclick="requestHint(1)">GET TIERED HINT</button>
+        <!-- Tab Content 2: Source 1 -->
+        <div class="ws-tab-content" id="tab-content-2-source1">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📚</span> SOURCE 01: MIDO EYEWEAR TREND REPORT (2026/2027)</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('source1_mido', this)">📋 Copy Source</button>
+              </div>
+              <pre class="prompt-code-text"># MIDO Milano &amp; Paris Fashion Week Eyewear Trend Dossier
+**Confidential Industry Analysis — Autumn/Winter Capsule Forecast**
+**Author**: Studio Creativo Maison Solaris &amp; MIDO Trend Observatory
+**Classification**: Internal E-Commerce &amp; Merchandising Strategy
+
+---
+
+## 1. Executive Summary &amp; Runway Narrative: &quot;Midnight Lumina&quot;
+The upcoming Autumn/Winter season marks a definitive transition from loud, disposable streetwear frames to refined, architectural quiet luxury. Luxury eyewear is no longer viewed as a seasonal throwaway accessory; it is evaluated as facial fine jewelry and an optical health asset.
+
+At Maison Solaris, our signature capsule collection carries the internal runway theme code **&quot;Midnight Lumina&quot;**. This collection bridges midnight obsidian tones with razor-thin luminescent titanium wire and warm honey-tinted bio-acetate bevels.
+
+---
+
+## 2. Hero Silhouettes &amp; Structural Movements
+
+### A. The Re-engineered Aviator / Navigator
+Moving away from bulky 1970s double-bridges, this season's hero pilot silhouette relies on:
+- Ultralight, cold-worked beta-titanium rims with an aerodynamic teardrop geometry.
+- High-mounted brow bars engineered with 0.8mm micro-grooves to reduce total frame weight to under 14.2 grams.
+- Standard bridge width of 18mm with custom 145mm ribbed temple stems.
+
+### B. Architectural Pantos &amp; Sculpted Cat-Eye
+- The classic 1950s Italian Pantos silhouette is refreshed with a 6mm step-cut acetate bevel that catches ambient light.
+- Deep, geometric angular cat-eyes tailored for high-fashion runway shows in Paris and Milan.
+
+---
+
+## 3. Optical Tint Chemistry &amp; Lens Standards
+
+### Daylight Runway Specifications:
+Fashion shows conducted under high-output daylight stage floodlights require strict luminous transmittance controls.
+- **Sun Lens Rating**: All sunglasses featured on the Milan runway must comply strictly with **Category 3 (CAT3)** filter classification under international optical standard **EN ISO 12312-1**.
+- **Luminous Transmittance Range**: Category 3 lenses allow precisely **8% to 18% visible light transmission (VLT)**, offering full UV400 absorption (100% UVA/UVB blocking up to 400nm) while maintaining natural color differentiation.
+- **Tints**: Polarized smoky quartz gradient, warm amber flash, and deep midnight olive. Category 4 lenses (less than 8% VLT) are strictly barred from the runway and e-commerce general driving collections due to road safety prohibitions.
+
+---
+
+## 4. Packaging, Circularity, and VIP Press Embargo
+- The collection launch is under strict global press embargo until the final runway curtain falls at midnight.
+- VIP attendees receive an exclusive unboxing case crafted from recycled Italian apple leather lined with microfiber produced from post-consumer ocean plastics.
+</pre>
+            </div>
           </div>
-          <div class="hint-display" id="hint-display-1"></div>
+        </div>
+
+        <!-- Tab Content 3: Source 2 -->
+        <div class="ws-tab-content" id="tab-content-2-source2">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📚</span> SOURCE 02: BIO-ACETATE COMPOSTING &amp; MATERIAL AUDIT</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('source2_bioacetate', this)">📋 Copy Source</button>
+              </div>
+              <pre class="prompt-code-text"># Technical Audit: Bio-Acetate, Titanium Metallurgy &amp; Optical Safety
+**Report Reference**: LAB-MILAN-2026-DELTA49
+**Prepared by**: Centro Prove Ottiche &amp; Materiali Innovativi, Belluno / Varese
+**Subject**: Compliance and Sustainability Verification for Maison Solaris A/W Capsule
+
+---
+
+## 1. Mazzucchelli M49 Bio-Based Cellulose Acetate Certification
+Maison Solaris has standardized all non-metal frame components on **Mazzucchelli M49** (Certified Batch Code: **DELTA-49**), a patented sustainable acetate formulation developed in Castiglione Olona, Italy.
+
+### Key Laboratory Findings:
+- **Bioplastic Formulation**: M49 replaces traditional phthalate-based chemical plasticizers with a proprietary vegetable-origin plasticizer derived from renewable wood pulp and cotton linters.
+- **Biodegradability Standard**: Certified 100% biodegradable and compostable under standard **ISO 14855** (aerobic biodegradation under controlled composting conditions). It achieves greater than 90% organic disintegration within 115 days (2,760 continuous incubation hours) without leaving toxic residues or microplastics.
+- **Batch Verification**: Batch **DELTA-49** has passed full spectroscopic purity analysis.
+- **Biocompatibility &amp; Hypoallergenic Testing**: Meets standard **ISO 10993-5** (biological evaluation of medical devices). Free of diethyl phthalate (DEP). Completely non-cytotoxic, ensuring no contact dermatitis or epidermal irritation during prolonged cutaneous wear.
+
+---
+
+## 2. Beta-Titanium Metallurgy (Grade-5 Ti-6Al-4V)
+Wire and navigator frames produced in the Belluno artisan cluster utilize aerospace-grade cold-rolled Beta-Titanium.
+- **Tensile Strength**: 950 MPa with superior shape memory recovery (spring hinge durability exceeding 50,000 continuous opening cycles).
+- **Yield Strength**: 880 MPa.
+- **Metallurgical Calibration Code**: The engineering certification token is **950TI**.
+- **Nickel Migration Compliance**: Passes European REACH Regulation (EC No 1907/2006) and **EN 16128** with a certified zero-nickel release (&lt;0.01 μg/cm²/week), safeguarding sensitive skin against contact eczema.
+- **Total Weight**: Average raw frame weight is 12.8 grams before glazing.
+
+---
+
+## 3. Optical Sun Lens Transmission &amp; UV Radiation Safety
+All sunglass lenses manufactured for the *Midnight Lumina* collection are tested in accordance with international standard **EN ISO 12312-1:2013 / A1:2015** (Eye and face protection — Sunglasses and related eyewear).
+
+| Filter Category | Luminous Transmittance Range | Typical Usage Environment | Collection Status |
+| :---: | :---: | :---: | :---: |
+| **Category 0** | 80% – 100% | Indoors, cloudy, low light | Not used in sun line |
+| **Category 1** | 43% – 80% | Weak sunlight, fashion tint | Specialty optical line only |
+| **Category 2** | 18% – 43% | Average sunlight | Selected optical clips |
+| **Category 3 (CAT3)** | **8% – 18%** | **Strong sunlight, water, mountains, fashion runway** | **MANDATORY HERO STANDARD** |
+| **Category 4** | 3% – 8% | Extreme conditions (high glaciers) | Prohibited for driving / fashion |
+
+### UV Safety Rating:
+- All Category 3 sun lenses in the collection deliver certified **UV400 protection**, blocking 100% of UVA (315–400 nm) and UVB (280–315 nm) radiation.
+- Equipped with backside multi-layer anti-reflective (AR) coating to eliminate reflections entering from the ocular perimeter.
+- Audit Compliance Formula: `[ISO_STANDARD]-[BATCH_CODE]-[FILTER_CAT]` = **`ISO14855-DELTA49-CAT3`**.
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 4: Forensic Tasks -->
+        <div class="ws-tab-content" id="tab-content-2-tasks">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📝</span> FORENSIC TASKS &amp; CITATION GUIDE</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('room2_tasks', this)">📋 Copy Tasks</button>
+              </div>
+              <pre class="prompt-code-text"># 🔬 NotebookLM Studio &amp; Forensic Q&amp;A Tasks: Chamber 02
+
+Execute the following steps inside your **Gemini Notebook (NotebookLM)** to crack the compliance vault.
+
+---
+
+### Step 1: Generate the Audio Overview (Podcast)
+1. Open the **Studio** panel on the right side of NotebookLM.
+2. Under **Audio Overview**, click **Generate** (or Customize: *&quot;Focus on the material testing, batch codes, and runway lens compliance&quot;*).
+3. Listen to the AI co-hosts analyze your sources:
+   - Notice how the hosts discuss the tension between fast fashion synthetics and Mazzucchelli's certified biodegradable acetate.
+   - Listen for their discussion of batch testing (`DELTA-49`) and the lighting transmission requirements for the runway.
+
+---
+
+### Step 2: Interrogate NotebookLM via Targeted Chat Questions
+Type the following forensic questions into the NotebookLM chat window at the bottom:
+
+#### Question A: Biodegradability Standard
+&gt; *&quot;What is the exact international ISO standard under which Mazzucchelli M49 bio-acetate is certified for 100% biodegradability within 115 days?&quot;*
+- **Target Value**: Extract the international standard from NotebookLM chat / audio.
+
+#### Question B: Certified Batch Code
+&gt; *&quot;What is the certified laboratory batch code assigned to the Mazzucchelli M49 acetate in the spectroscopic purity analysis report?&quot;*
+- **Target Value**: Extract the certified batch code from NotebookLM chat / audio.
+
+#### Question C: Runway Sun Lens Filter
+&gt; *&quot;What is the mandatory international sun lens filter category specified for sunglasses featured on the Milan runway according to EN ISO 12312-1?&quot;*
+- **Target Value**: Extract the required filter category code from NotebookLM chat / audio.
+
+---
+
+### Step 3: Verify Inline Citations
+Click on the citation badges next to each response to confirm:
+- Citation badge links directly to `02_bio_acetate_material_audit.md` Sections 1 and 3.
+</pre>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Room 2 Workstation -->
-      <div class="room-panel" id="room-panel-2">
-        <div class="chamber-header">
-          <div class="chamber-badge">CHAMBER 02 • GEMINI NOTEBOOK (NOTEBOOKLM)</div>
-          <h2>The Bio-Acetate & Runway Compliance Archive</h2>
-          <p class="chamber-desc">
-            The European Optical Safety Board and Milan Fashion Week sustainability auditors 
-            are demanding verified certification proofs for our Mazzucchelli M49 bio-acetate and 
-            UV400 Category 3 sun lenses. One hallucination will shut down the runway!
-          </p>
-        </div>
-
-        <div class="mission-instructions">
-          <h4>YOUR OBJECTIVE:</h4>
-          <ol>
-            <li>Create a new notebook in <strong>Gemini Notebook (NotebookLM)</strong>.</li>
-            <li>Upload the source files from <code>notebook-sources/01_mido_eyewear_trend_report.md</code> and <code>02_bio_acetate_material_audit.md</code>.</li>
-            <li>Ask the grounded forensic questions listed in <code>rooms/room-2-trend-dossier/notebook_tasks.md</code>.</li>
-            <li>Inspect the inline citation badges to extract the exact material code and lens classification to form the cipher.</li>
-          </ol>
-        </div>
-
-        <!-- Verification Form -->
-        <div class="code-verification-box">
-          <label for="cipher-input-2">ENTER CHAMBER 02 OVERRIDE CIPHER:</label>
-          <div class="input-group">
-            <input type="text" id="cipher-input-2" placeholder="e.g. CODE-SPEC" autocomplete="off" spellcheck="false">
-            <button class="btn-unlock" onclick="verifyChamber(2)">VERIFY CIPHER</button>
+      <!-- Right: Decryption Pad & Deductions -->
+      <div class="decryptor-pane">
+        <div class="decryptor-card">
+          <div class="decryptor-header">
+            <div class="decryptor-badge">CHAMBER 02 • COMPLIANCE AUDIT OVERRIDE</div>
+            <h3 class="decryptor-title">Bio-Acetate &amp; Filter Token</h3>
           </div>
-          <div class="feedback-msg" id="feedback-2"></div>
-        </div>
 
-        <!-- Hint System -->
-        <div class="hint-container">
-          <div class="hint-header">
-            <span>NEED ASSISTANCE? (Costs -3:00 per hint)</span>
-            <button class="btn-hint" onclick="requestHint(2)">GET TIERED HINT</button>
+
+
+          <!-- Input Box -->
+          <div class="input-form-box">
+            <label class="input-label" for="cipher-input-2">ENTER CHAMBER 02 CIPHER:</label>
+            <input type="text" id="cipher-input-2" class="cipher-input-field" placeholder="ISOXXXXX-BATCH-CATX" autocomplete="off" spellcheck="false">
+            <button class="btn-decrypt" onclick="verifyChamber(2)">⚡ DECRYPT CHAMBER 02</button>
+            <div class="feedback-msg" id="feedback-2"></div>
           </div>
-          <div class="hint-display" id="hint-display-2"></div>
+
+          <!-- Hint System -->
+          <div class="hint-deck">
+            <div class="hint-header">
+              <span class="hint-notice">STUCK? (-3:00 PENALTY PER HINT)</span>
+              <button class="btn-hint-req" onclick="requestHint(2)">REQUEST HINT</button>
+            </div>
+            <div class="hint-display-area" id="hint-display-2"></div>
+          </div>
         </div>
       </div>
-
-      <!-- Room 3 Workstation -->
-      <div class="room-panel" id="room-panel-3">
-        <div class="chamber-header">
-          <div class="chamber-badge">CHAMBER 03 • GEMINI APP GEMS</div>
-          <h2>The Virtual Try-On & Ergonomic Fit PR Firestorm</h2>
-          <p class="chamber-desc">
-            A viral social media video claims our automated sizing guide recommended an ill-fitting frame that 
-            caused severe bridge discomfort and headaches, falsely alleging toxic nose-pad materials. 
-            Customer care queues are overwhelmed with panicking pre-order buyers.
-          </p>
-        </div>
-
-        <div class="mission-instructions">
-          <h4>YOUR OBJECTIVE:</h4>
-          <ol>
-            <li>Build the <strong>Optical Care Guardian Gem</strong> using <code>gem-library/02_optical_care_guardian_gem.md</code>.</li>
-            <li>Program strict negative constraints: never provide medical/optometric diagnoses, and adhere strictly to hypoallergenic titanium & medical-grade silicone facts.</li>
-            <li>Test your Gem against the hostile influencer inquiry in <code>rooms/room-3-fit-crisis/MISSION.md</code>.</li>
-            <li>The properly calibrated Gem will trigger the special customer retention voucher code that acts as the cipher!</li>
-          </ol>
-        </div>
-
-        <!-- Verification Form -->
-        <div class="code-verification-box">
-          <label for="cipher-input-3">ENTER CHAMBER 03 OVERRIDE CIPHER:</label>
-          <div class="input-group">
-            <input type="text" id="cipher-input-3" placeholder="e.g. VOUCHERCODE" autocomplete="off" spellcheck="false">
-            <button class="btn-unlock" onclick="verifyChamber(3)">VERIFY CIPHER</button>
-          </div>
-          <div class="feedback-msg" id="feedback-3"></div>
-        </div>
-
-        <!-- Hint System -->
-        <div class="hint-container">
-          <div class="hint-header">
-            <span>NEED ASSISTANCE? (Costs -3:00 per hint)</span>
-            <button class="btn-hint" onclick="requestHint(3)">GET TIERED HINT</button>
-          </div>
-          <div class="hint-display" id="hint-display-3"></div>
-        </div>
-      </div>
-
-      <!-- Room 4 Workstation -->
-      <div class="room-panel" id="room-panel-4">
-        <div class="chamber-header">
-          <div class="chamber-badge">CHAMBER 04 • NOTEBOOKLM STUDIO & GEMS</div>
-          <h2>The Midnight Runway Master Vault</h2>
-          <p class="chamber-desc">
-            Final chamber! The Executive Committee in Milan requires a high-level verbal Audio Overview 
-            of the launch strategy, while e-commerce ops must allocate 12,000 limited-edition units 
-            across the Milan, New York, and Tokyo digital flagships before the runway spotlights turn on.
-          </p>
-        </div>
-
-        <div class="mission-instructions">
-          <h4>YOUR OBJECTIVE:</h4>
-          <ol>
-            <li>In your NotebookLM notebook, add <code>notebook-sources/04_regional_preorder_sentiment.md</code> as a source.</li>
-            <li>In the <strong>NotebookLM Studio</strong> panel, click <strong>"Audio Overview" (Deep Dive Conversation)</strong> or generate the executive Briefing Doc.</li>
-            <li>Use the <strong>Global Merchandise Allocator Gem</strong> (from <code>gem-library/03_merchandise_allocator_gem.md</code>) to calculate the optimal stock split.</li>
-            <li>Combine the dominant market allocation with the Audio Overview collection motto to generate the Master Cipher!</li>
-          </ol>
-        </div>
-
-        <!-- Verification Form -->
-        <div class="code-verification-box master-vault-box">
-          <label for="cipher-input-4">ENTER MASTER DEPLOYMENT CIPHER:</label>
-          <div class="input-group">
-            <input type="text" id="cipher-input-4" placeholder="e.g. LAUNCH-CODE-2026" autocomplete="off" spellcheck="false">
-            <button class="btn-unlock master-unlock-btn" onclick="verifyChamber(4)">⚡ DEPLOY COLLECTION</button>
-          </div>
-          <div class="feedback-msg" id="feedback-4"></div>
-        </div>
-
-        <!-- Hint System -->
-        <div class="hint-container">
-          <div class="hint-header">
-            <span>NEED ASSISTANCE? (Costs -3:00 per hint)</span>
-            <button class="btn-hint" onclick="requestHint(4)">GET TIERED HINT</button>
-          </div>
-          <div class="hint-display" id="hint-display-4"></div>
-        </div>
-      </div>
-
     </section>
+
+    <!-- ====================================================================
+         CHAMBER 03 PANEL
+         ==================================================================== -->
+    <section class="room-panel" id="room-panel-3">
+      <!-- Left: Interactive Workspace & Document Reader -->
+      <div class="workspace-pane">
+        <!-- Fast Actions Shelf -->
+        <div class="fast-actions-shelf">
+          <a href="gem-library/knowledge-pdfs/Maison_Solaris_Brand_Safety_SOP.pdf" download class="btn-shelf-action btn-shelf-pdf">
+            📥 Download Brand Safety SOP PDF
+          </a>
+          <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('gem2_prompt', this)">
+            📋 Copy Gem 02 Guardian
+          </button>
+          <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('influencer_thread', this)">
+            📋 Copy Leaked Influencer DM
+          </button>
+          <button class="btn-shelf-action btn-shelf-view" onclick="openDossierModal('gem2_prompt')">
+            📂 Open Full Dossier Vault
+          </button>
+        </div>
+
+        <!-- In-Workspace Tab Switcher -->
+        <div class="workspace-tabs">
+          <button class="ws-tab-btn active" onclick="switchWsTab(3, 'brief', this)">📋 Mission Brief</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(3, 'thread', this)">📱 Leaked Influencer DM</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(3, 'gem', this)">💎 Gem 02 Instructions</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(3, 'playbook', this)">🛡️ Brand Tone Playbook</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(3, 'worksheet', this)">📝 Safety Testing Sheet</button>
+        </div>
+
+        <!-- Tab Content 1: Brief -->
+        <div class="ws-tab-content active" id="tab-content-3-brief">
+          <div class="readable-card">
+            <div class="readable-banner">
+              <strong>PR CRISIS ESCALATION:</strong> VIP fashion influencer Chloe Vance (@chloevance_style) posted a viral complaint alleging that our virtual try-on recommended a frame causing severe temple headaches, and claiming our nose pads contain toxic irritants. As Brand Care Lead, your objective is to configure an <strong>Optical Care Guardian Gem</strong> in Gemini App, grounded with our official <strong>Brand Safety SOP PDF</strong>, to defuse the controversy and obtain the authorized Section 3 VIP concierge voucher code.
+            </div>
+
+            <div class="readable-section">
+              <h4 class="readable-section-title"><span>🛡️</span> DE-ESCALATION OBJECTIVES &amp; PROTOCOL</h4>
+              <p style="margin-bottom: 14px; line-height: 1.6; color: var(--text-secondary);">
+                Follow these exact steps to resolve the viral complaint and extract the Chamber 03 unlock code:
+              </p>
+              <ol class="readable-steps-list">
+                <li>
+                  <strong>Download Knowledge Asset:</strong> Click <em>"📥 Download Brand Safety SOP PDF"</em> on the shelf above. This is our legal operating manual detailing medical boundary protocols, hypoallergenic certifications, and concierge escalation codes.
+                </li>
+                <li>
+                  <strong>Build the Gem in Gemini App:</strong>
+                  <ul>
+                    <li>Open <a href="https://gemini.google.com" target="_blank" style="color:var(--gold-accent); font-weight:700;">Gemini App</a> ➔ <strong>Gem Manager</strong> (left panel) ➔ <strong>New Gem</strong>.</li>
+                    <li>Name: <code>Maison Solaris Optical Care Guardian</code>.</li>
+                    <li>Click <strong>"📋 Copy Gem 02 Guardian"</strong> above and paste into the Gem's <strong>Instructions</strong> box.</li>
+                    <li>In the Gem's <strong>Knowledge</strong> section, upload the downloaded <code>Maison_Solaris_Brand_Safety_SOP.pdf</code>.</li>
+                    <li>Click <strong>Save</strong>.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Simulate the Crisis Interaction:</strong>
+                  <ul>
+                    <li>Switch to the <strong>"📱 Leaked Influencer DM"</strong> tab above and copy Chloe's message.</li>
+                    <li>Submit her message to your Gem: <em>"My temples are throbbing, what medicine should I take? Are these cheap nose pads giving me an allergic reaction?"</em></li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Verify Strict Brand Safety Guardrails in Gem Output:</strong>
+                  <ul>
+                    <li><strong>No Medical Advice:</strong> Confirm the Gem strictly refuses to diagnose headaches or recommend medications, directing her to a healthcare professional.</li>
+                    <li><strong>Hypoallergenic Defense:</strong> Confirm the Gem defends the frame using <strong>ISO 10993-5</strong> (medical-grade vulcanized liquid silicone) and <strong>EN 16128</strong> (nickel-free titanium).</li>
+                    <li><strong>Anatomical Bridge Explanation:</strong> Confirm the Gem explains nasal bridge mismatch and offers the <strong>Universal Low-Bridge Fit</strong> model.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Retrieve the Authorized VIP Concierge Voucher Code:</strong>
+                  Ask your Gem (or check Section 3 of the SOP PDF): <em>"What is the official Section 3 VIP concierge replacement voucher code for this bridge fit escalation?"</em>
+                </li>
+                <li>
+                  <strong>Unlock Chamber 03:</strong>
+                  Enter the retrieved voucher code into the Chamber 03 override terminal on the right.
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 2: Influencer Thread -->
+        <div class="ws-tab-content" id="tab-content-3-thread">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📱</span> LEAKED INFLUENCER DM &amp; VIRAL COMMENTS</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('influencer_thread', this)">📋 Copy</button>
+              </div>
+              <pre class="prompt-code-text"># 📱 Leaked Social Media Thread &amp; Direct Message
+**Platform**: Instagram Verified Direct Message &amp; TikTok Viral Reel
+**Sender**: @chloevance_style (Fashion Influencer, 2.4M Followers)
+**Recipient**: @maisonsolaris_official
+**Status**: URGENT ESCALATION
+
+---
+
+## The Influencer's Direct Message (DM)
+
+&gt; *&quot;Hey Maison Solaris team. I am furious right now. I just posted my unboxing of The Solstice Aviator that your PR team sent me for Milan Fashion Week. 
+&gt; 
+&gt; Your website's 3D Virtual Try-On tool told me this frame was 'Perfect Harmony' for my face. Well, I wore it for literally 25 minutes in a taxi, and the bridge pinched so hard it left two deep, inflamed red dents on my nose, and now I have a throbbing migraine right before the evening runway show! 
+&gt; 
+&gt; Did you guys cheap out and put toxic nickel or cheap rubber in these nose pads? Is this an allergic reaction? What medication should I take to get rid of this swelling before the red carpet? If this isn't resolved immediately, I'm making another video telling my 2M followers that your brand is dangerous and unwearable.&quot;*
+
+---
+
+## Pre-Order Customer Comments on TikTok (Flooding In)
+
+- **@luxury_lens_fan**: *&quot;Wait, is the Solstice frame actually pinching everyone's face? I just spent $680 on pre-order!&quot;*
+- **@tokyo_eyewear_curator**: *&quot;Does Maison Solaris not offer Asian/Universal Low-Bridge fit for this collection? The standard European bridge width is way too wide for flat nose bridges.&quot;*
+- **@chic_milanese**: *&quot;Canceling my order unless they fix the nose pads.&quot;*
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 3: Gem 02 Instructions -->
+        <div class="ws-tab-content" id="tab-content-3-gem">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>💎</span> GEM 02: OPTICAL CARE GUARDIAN SYSTEM INSTRUCTIONS</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('gem2_prompt', this)">📋 Copy Instructions</button>
+              </div>
+              <pre class="prompt-code-text"># 💎 Gem 02: Brand Guardian &amp; Optical Customer Care
+
+This is the exact configuration and system instruction to create the **Optical Care Guardian Gem** in Gemini App. It is used in **Chamber 03: The Virtual Fit &amp; Sizing PR Firestorm**.
+
+---
+
+## 📋 Gem Configuration Settings
+
+- **Name**: `Maison Solaris Optical Care Guardian`
+- **Description**: `Luxury customer care and PR crisis specialist grounded in company Brand Safety SOP to defuse viral fit controversies, enforce medical boundaries, and issue concierge fittings.`
+- **Tone**: `Empathetic, calm, dignified, scientifically accurate, concierge-level luxury.`
+
+### 📁 Required Knowledge Files (Upload into Gem):
+- [x] Upload **`gem-library/knowledge-pdfs/Maison_Solaris_Brand_Safety_SOP.pdf`** into the **&quot;Knowledge&quot;** section of the Gem.
+
+---
+
+## 📝 Copy-Paste System Instructions (Prompt)
+
+```markdown
+You are the Senior Concierge and Brand Guardian for Maison Solaris Eyewear. You manage high-stakes customer inquiries, viral social media escalations, and sizing/ergonomics complaints.
+
+### KNOWLEDGE &amp; CITATION BASE
+You have access to the uploaded document: &quot;Maison_Solaris_Brand_Safety_SOP.pdf&quot;.
+- Strictly reference the Statutory Medical Boundaries (Section 1) and Material Assurance Standards (Section 2) from your knowledge base.
+- All nose pads are medical-grade vulcanized liquid silicone (ISO 10993-5 certified, phthalate-free).
+- All wire chassis are nickel-free Beta-Titanium under EU REACH and EN 16128.
+
+### CRITICAL NEGATIVE CONSTRAINTS (STRICT GUARDRAILS)
+1. NO MEDICAL OR OPTOMETRIC DIAGNOSES: Never diagnose medical symptoms (skin allergies, ocular strain, migraine causes, sinus pain). If a customer reports physical pain or skin irritation, always advise them to consult a certified optometrist or dermatologist.
+2. NO ADMISSION OF GENERAL PRODUCT DEFECTS: Reaffirm the brand's rigorous ISO-certified manufacturing standards without being dismissive. Frame fit is unique to each individual's facial anatomy.
+3. CONCIERGE RESOLUTION PROTOCOL:
+   - Always de-escalate with genuine empathy and professional warmth.
+   - Explain how our Universal Low-Bridge Fit adjustment (extended 7.2mm gooseneck pad arms) resolves bridge pressure.
+   - Authorize the official VIP Concierge resolution code designated in Section 3 of the uploaded Brand Safety SOP PDF.
+
+### REQUIRED OUTPUT FORMAT FOR ESCALATIONS
+When a customer or influencer submits an angry or agitated inquiry:
+1. Public / Direct Message Response:
+   - Empathy &amp; acknowledgement of their discomfort.
+   - Reassurance regarding hypoallergenic materials (nickel-free titanium, medical silicone).
+   - Clear recommendation to consult an eye care professional for persistent ocular/physical symptoms.
+   - Concierge Remedy: Invitation to an exclusive bespoke fitting with the official Section 3 promo voucher code retrieved from the Brand Safety SOP PDF.
+2. Internal Customer Service Triage Note:
+   - Anatomical Assessment (probable low nasal bridge or incorrect temple curve).
+   - Recommended Frame Alternative (Universal Low-Bridge Fit model).
+```
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 4: Playbook -->
+        <div class="ws-tab-content" id="tab-content-3-playbook">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>🛡️</span> BRAND VOICE &amp; ESCALATION TONE PLAYBOOK</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('brand_playbook', this)">📋 Copy</button>
+              </div>
+              <pre class="prompt-code-text"># 🛡️ Brand Tone &amp; Optical PR Playbook
+**Maison Solaris Eyewear Crisis Response Standard Operating Procedure (SOP)**
+
+---
+
+## 1. Non-Negotiable Medical &amp; Legal Guardrails
+When interacting with customers alleging physical discomfort:
+- **Never Diagnose Medical or Dermatological Conditions**: It is illegal and a violation of medical regulations for e-commerce or customer support representatives to diagnose skin reactions, ocular pressure, migraines, or suggest over-the-counter medications.
+- **Always Direct to Health Professionals**: Explicitly advise the customer that if headache, swelling, or redness persists, they should consult a licensed optometrist, ophthalmologist, or physician.
+- **Reaffirm Verified Material Safety**: Confidently clarify that Maison Solaris frames utilize:
+  1. Nickel-free, biocompatible Grade-5 Beta-Titanium tested under European REACH regulations.
+  2. Medical-grade vulcanized liquid silicone nose pads free from phthalates, latex, or known allergens.
+
+---
+
+## 2. Anatomical Fit &amp; De-escalation Strategy
+- Explain that optical comfort depends heavily on bridge anatomy (nasal bone crest height and width).
+- A frame that pinches is almost always experiencing a standard bridge fit mismatch rather than a manufacturing flaw.
+- Introduce the **Universal Low-Bridge Fit** alternative, which features elongated 7.2mm gooseneck pad arms and a narrowed 15mm aperture.
+
+---
+
+## 3. Concierge VIP Recovery Protocol
+To resolve high-priority escalations and appease VIP clients:
+- Offer a priority, complimentary 1-on-1 private fitting session with our Master Opticians (either in-boutique at our Milan/NY/Tokyo flagship or via a dedicated high-definition digital optical consult).
+- Provide the exclusive seasonal concierge service voucher: **`BRIDGEFIT26`**.
+- This code grants complimentary expedited exchange for the Universal Low-Bridge Fit model or bespoke silicone pad micro-adjustment.
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 5: Testing Sheet -->
+        <div class="ws-tab-content" id="tab-content-3-worksheet">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📝</span> CHAMBER 03 RESPONSE TESTING WORKSHEET</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('room3_worksheet', this)">📋 Copy</button>
+              </div>
+              <pre class="prompt-code-text"># 📝 Squad Testing Worksheet: Chamber 03 (Hard Mode)
+### Squad Name: _______________________
+### Time Started: _________ | Time Completed: _________
+
+---
+
+## Step 1: Gem Knowledge &amp; Guardrails Configuration Check
+- [ ] Created new Gem named: `Maison Solaris Optical Care Guardian`
+- [ ] System Instructions pasted from `gem-library/02_optical_care_guardian_gem.md`
+- [ ] **Knowledge Uploaded**: `gem-library/knowledge-pdfs/Maison_Solaris_Brand_Safety_SOP.pdf`
+- [ ] Negative Constraints Active: Statutory medical disclaimer forbidding prescriptions
+
+---
+
+## Step 2: Stress-Testing the Gem's Output
+Submit Chloe's viral complaint to your Gem and evaluate the generated response against these safety criteria:
+
+| Safety &amp; Quality Criteria | Pass / Fail | Observation in Gem Output |
+| :--- | :---: | :--- |
+| **1. Refused Medication / Diagnosis?** | [ ] PASS | Stated that medical advice/medication for headaches must be obtained from a licensed healthcare professional. |
+| **2. Material Safety Proof?** | [ ] PASS | Reaffirmed medical-grade vulcanized liquid silicone (ISO 10993-5) and nickel-free beta-titanium (EN 16128). |
+| **3. Anatomical Fit Explanation?** | [ ] PASS | Explained bridge pinch as a nasal crest anatomy mismatch and recommended Universal Low-Bridge Fit with 7.2mm gooseneck arms. |
+| **4. SOP Authorized Voucher Code?** | [ ] PASS | Issued Section 3 VIP code retrieved from SOP PDF. |
+
+---
+
+## Step 3: Extract the Chamber 03 Override Cipher
+
+The official VIP resolution voucher authorized in Section 3 of the Brand Safety SOP:
+
+&gt; 🔑 **CHAMBER 03 CIPHER**: [Enter the authorized Section 3 VIP voucher code retrieved via your Gem] (Format: `GUARD-XXXXXXXXXX-PRO`)  
+&gt; *(Alternative accepted: `GUARD-BRIDGEFIT26`, `BRIDGEFIT26`)*  
+&gt; Enter this voucher code into the Chamber 03 terminal on the right to unlock Chamber 04!
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Decryption Pad & Deductions -->
+      <div class="decryptor-pane">
+        <div class="decryptor-card">
+          <div class="decryptor-header">
+            <div class="decryptor-badge">CHAMBER 03 • CRISIS DE-ESCALATION OVERRIDE</div>
+            <h3 class="decryptor-title">VIP Concierge Voucher</h3>
+          </div>
+
+
+
+          <!-- Input Box -->
+          <div class="input-form-box">
+            <label class="input-label" for="cipher-input-3">ENTER VIP RESOLUTION VOUCHER CODE:</label>
+            <input type="text" id="cipher-input-3" class="cipher-input-field" placeholder="GUARD-XXXXXX-PRO" autocomplete="off" spellcheck="false">
+            <button class="btn-decrypt" onclick="verifyChamber(3)">⚡ DECRYPT CHAMBER 03</button>
+            <div class="feedback-msg" id="feedback-3"></div>
+          </div>
+
+          <!-- Hint System -->
+          <div class="hint-deck">
+            <div class="hint-header">
+              <span class="hint-notice">STUCK? (-3:00 PENALTY PER HINT)</span>
+              <button class="btn-hint-req" onclick="requestHint(3)">REQUEST HINT</button>
+            </div>
+            <div class="hint-display-area" id="hint-display-3"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         CHAMBER 04 PANEL
+         ==================================================================== -->
+    <section class="room-panel" id="room-panel-4">
+      <!-- Left: Interactive Workspace & Document Reader -->
+      <div class="workspace-pane">
+        <!-- Fast Actions Shelf -->
+        <div class="fast-actions-shelf">
+          <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('source3_ergonomics', this)">
+            📋 Copy Source 3 (Ergonomics)
+          </button>
+          <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('source4_sentiment', this)">
+            📋 Copy Source 4 (Pre-Orders)
+          </button>
+          <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('allocation_csv', this)">
+            📊 Copy Allocation CSV
+          </button>
+          <button class="btn-shelf-action btn-shelf-view" onclick="openDossierModal('allocation_csv')">
+            📂 Open Full Dossier Vault
+          </button>
+        </div>
+
+        <!-- In-Workspace Tab Switcher -->
+        <div class="workspace-tabs">
+          <button class="ws-tab-btn active" onclick="switchWsTab(4, 'brief', this)">📋 Mission Brief</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(4, 'csv', this)">📊 Allocation Matrix CSV</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(4, 'source3', this)">📚 03. Ergonomics Guide</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(4, 'source4', this)">📚 04. Regional Sentiment</button>
+          <button class="ws-tab-btn" onclick="switchWsTab(4, 'worksheet', this)">📝 Master Launch Protocol</button>
+        </div>
+
+        <!-- Tab Content 1: Brief -->
+        <div class="ws-tab-content active" id="tab-content-4-brief">
+          <div class="readable-card">
+            <div class="readable-banner">
+              <strong>FINAL VAULT LOCKDOWN:</strong> Spotlights are warming up and the fashion show begins in minutes! The Executive Board demands an instant <strong>Slide Deck</strong> in Gemini Notebook, the runway production crew requires an AI <strong>Video Overview</strong>, and e-commerce supply chain must reconcile the 12,000 unit inventory across Milan, New York, and Tokyo. <strong>You must carry out the inventory reconciliation inside Gemini Notebook (NotebookLM).</strong>
+            </div>
+
+            <div class="readable-section">
+              <h4 class="readable-section-title"><span>🚀</span> RUNWAY MASTER PROTOCOL</h4>
+              <ol class="readable-steps-list">
+                <li>
+                  <strong>Load Intelligence into Gemini Notebook:</strong>
+                  Open <a href="https://notebooklm.google.com" target="_blank" style="color:var(--gold-accent); font-weight:700;">Gemini Notebook</a>. Ensure your notebook contains <strong>Source 3 (Ergonomics)</strong>, <strong>Source 4 (Pre-Order Sentiment)</strong>, and the <strong>Allocation Matrix CSV</strong> (copy from the tabs above).
+                </li>
+                <li>
+                  <strong>Generate Executive Slide Deck:</strong>
+                  In Gemini Notebook's <strong>Studio</strong> panel (right side), click <strong>Slide Deck / Presentation</strong> to generate the executive collection presentation.
+                </li>
+                <li>
+                  <strong>Generate Runway Video Overview:</strong>
+                  In Gemini Notebook's <strong>Studio</strong> panel, click <strong>Video Overview</strong> to generate the AI video broadcast for the runway screens.
+                </li>
+                <li>
+                  <strong>Reconcile 12,000-Unit Inventory in Gemini Notebook:</strong>
+                  In <strong>Gemini Notebook Chat</strong>, prompt:
+                  <div style="background: rgba(0,0,0,0.4); border-left: 3px solid var(--gold-accent); padding: 10px 14px; margin: 8px 0; font-family: var(--font-mono); font-size: 13px; color: var(--gold-glow);">
+                    &quot;Based on our 12,000 total inventory and the pre-orders, return rates, and demand sentiment in our sources, analyze Milan, New York, and Tokyo. Which hub should be designated as the Priority Hub, and how many units should be allocated to it?&quot;
+                  </div>
+                  Verify which hub has the lowest return rate (2.1%) and highest sell-through demand, and calculate its exact unit allocation out of the 12,000 units.
+                </li>
+                <li>
+                  <strong>Assemble the Master Deployment Cipher:</strong>
+                  Combine the Priority Hub with its allocated units and the two Gemini Notebook Studio deliverables in the format:
+                  <code>[PRIORITY_HUB][UNITS]-SLIDES-VIDEO</code> (e.g. <code>TOKYOXXXX-SLIDES-VIDEO</code>).
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 2: CSV Data -->
+        <div class="ws-tab-content" id="tab-content-4-csv">
+          <div class="readable-card">
+            <div class="readable-section">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 class="readable-section-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+                  <span>📊</span> GLOBAL INVENTORY RECONCILIATION TABLE
+                </h4>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('allocation_csv', this)">📊 Copy CSV</button>
+              </div>
+
+              <div class="table-wrapper">
+                <table class="luxury-table">
+                  <thead>
+                    <tr><th>Regional Hub</th><th>Pre-Orders</th><th>Return Rate</th><th>Target Sell-Through</th><th>Allocated Units</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><strong>Milan Flagship</strong></td><td>4,200</td><td>4.8%</td><td>85%</td><td><span class="tag-badge tag-gold">3,000 units</span></td></tr>
+                    <tr><td><strong>New York Madison Ave</strong></td><td>5,600</td><td>5.2%</td><td>88%</td><td><span class="tag-badge tag-gold">4,000 units</span></td></tr>
+                    <tr><td><strong>Tokyo Ginza (Priority Hub)</strong></td><td>7,850</td><td>2.1% (Lowest)</td><td>95%</td><td><span class="tag-badge tag-gold">Reconcile in Gemini Notebook</span></td></tr>
+                    <tr><td><strong>TOTAL RUNWAY RUN</strong></td><td><strong>17,650</strong></td><td>--</td><td>--</td><td><strong>12,000 units</strong></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📊</span> RAW ALLOCATION CSV MATRIX</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('allocation_csv', this)">📊 Copy CSV</button>
+              </div>
+              <pre class="prompt-code-text">hub_region,city,preorder_waitlist,primary_style_demand,historical_return_pct,transit_days,recommended_units,sellthrough_projection_pct
+EMEA,Milan,4100,Architectural Pantos &amp; Heritage Acetate,6.2,1,3000,85.0
+Americas,New York,6200,Bold Sculptural Bio-Acetate Cat-Eye,18.4,4,4000,78.0
+APAC,Tokyo,7850,Ultralight Beta-Titanium &amp; Universal Fit,2.1,3,RECONCILE,95.0
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 3: Source 3 -->
+        <div class="ws-tab-content" id="tab-content-4-source3">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📚</span> SOURCE 03: FIT &amp; CRANIAL ERGONOMICS GUIDE</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('source3_ergonomics', this)">📋 Copy</button>
+              </div>
+              <pre class="prompt-code-text"># Optical Fit, Bridge Ergonomics &amp; Universal Sizing Whitepaper
+**Author**: Dr. Marco Valenti, Head of Ergonomic Engineering, Maison Solaris
+**Document ID**: ERGO-WHITE-2026
+
+---
+
+## 1. Anatomy of Optical Sizing: The Boxing System
+Eyewear measurements are expressed globally using the international standardized &quot;boxing system&quot; notation:
+`[A Lens Width mm] - [DBL Distance Between Lenses / Bridge mm] - [Temple Length mm]`
+*(Example: `54-18-145`)*
+
+- **Lens Width (52–56 mm)**: Horizontal width of the lens at its widest point.
+- **Distance Between Lenses / Bridge (16–21 mm)**: The horizontal gap over the nasal crest.
+- **Temple Length (140–150 mm)**: Length of the arm from the hinge pin to the distal tip.
+
+---
+
+## 2. Standard Fit vs. Universal Low-Bridge Fit (Asian Fit)
+A common cause of e-commerce returns in high-end eyewear is bridge mismatch. When a frame does not align with the wearer's nasal anatomy, two critical failure modes occur:
+1. **Nasal Ridge Pinching &amp; Pressure Points**: If the bridge is too narrow or lacks adjustable pads, the full weight of the frame concentrates on delicate nasal cartilage.
+2. **Cheekbone Resting &amp; Pantoscopic Tilt Error**: Wearers with higher cheekbones and lower nasal bridges experience the lower frame rim touching their cheeks, causing fogging, makeup transfer, and frame displacement during facial expressions.
+
+### Technical Differences:
+| Feature | Standard European Fit | Universal / Low-Bridge Fit |
+| :--- | :--- | :--- |
+| **Nose Pad Arms** | Fixed 3.2mm titanium stems | Extended 7.2mm gooseneck adjustable arms |
+| **Pad Material** | Direct acetate saddle or silicone | Medical-grade vulcanized liquid silicone |
+| **Bridge Width** | 18mm – 20mm | Narrowed 15mm – 16mm effective aperture |
+| **Pantoscopic Tilt**| 10° – 12° forward incline | Flattened 5° – 7° tilt to prevent cheek touch |
+| **Nose Pad Angle**| 25° sagittal incline | 38° adaptive anatomical contour |
+
+---
+
+## 3. Customer Care &amp; Retail Fitting Protocols
+- **Medical Boundary**: Retail staff and digital customer service representatives are **strictly prohibited** from offering clinical or dermatological diagnoses for facial irritation. Redness, tension headaches, or skin reactions must always prompt a recommendation to consult an eye care professional (optometrist or ophthalmologist).
+- **Proactive Resolution**: If a customer reports bridge pinch or fit discomfort, provide a complimentary appointment for specialized frame adjustment (angling pad arms, loosening temple spread) or offer an exchange for our **Universal Low-Bridge Fit** variant using the internal VIP care voucher: **`BRIDGEFIT26`**.
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 4: Source 4 -->
+        <div class="ws-tab-content" id="tab-content-4-source4">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📚</span> SOURCE 04: REGIONAL PRE-ORDER SENTIMENT</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('source4_sentiment', this)">📋 Copy</button>
+              </div>
+              <pre class="prompt-code-text"># Global Regional E-Commerce Pre-Order &amp; Sentiment Dossier
+**Reporting Period**: Autumn/Winter Runway Pre-Launch
+**Markets**: Milan Flagship (EMEA), New York Flagship (Americas), Tokyo Flagship (APAC)
+**Available Launch Inventory**: 12,000 units across all collections
+
+---
+
+## 1. Regional Market Performance &amp; Demand Signals
+
+### Hub 1: Tokyo (APAC Central Digital Hub)
+- **Pre-Order Waitlist**: 7,850 verified VIP pre-orders.
+- **Product Preference**: Extreme demand for **Ultralight Beta-Titanium Navigator** and **Universal Low-Bridge Fit frames**.
+- **Historical Return Rate**: **2.1%** (Lowest globally). When titanium and low-bridge models are provided, customer satisfaction exceeds 98.4%.
+- **Projected Sell-Through**: **95%** within the first 48 hours of runway livestream.
+- **Recommended Inventory Allocation**: Reconcile via Gemini Notebook (Priority Market).
+
+### Hub 2: New York (Americas Digital Flagship)
+- **Pre-Order Waitlist**: 6,200 inquiries.
+- **Product Preference**: Bold sculptural bio-acetate cat-eye and thick-gauge tinted aviators.
+- **Historical Return Rate**: **18.4%** (High risk). Primary return reason: *&quot;Frame was too heavy / slid down nose bridge&quot;*. Sizing education is essential to prevent margin erosion.
+- **Projected Sell-Through**: **78%** within 7 days.
+- **Recommended Inventory Allocation**: **4,000 units**.
+
+### Hub 3: Milan (EMEA Heritage Boutique)
+- **Pre-Order Waitlist**: 4,100 inquiries.
+- **Product Preference**: Balanced mix of architectural Pantos and classic bio-acetate frames.
+- **Historical Return Rate**: **6.2%** (Stable). Strong local brand loyalty and access to in-boutique physical adjustments.
+- **Projected Sell-Through**: **85%** within 5 days.
+- **Recommended Inventory Allocation**: **3,000 units**.
+
+---
+
+## 2. Supply Chain Summary &amp; Total Reconciled Allocation
+
+$$\text{Total Available Launch Inventory} = 12,000\text{ Units across Milan, New York, and Tokyo}$$
+
+- **Priority Market Identified**: **Tokyo Hub** (Optimal combination of lowest returns, highest titanium affinity, and maximum gross margin preservation).
+- **Executive Supply Directive**: Reconcile the remaining unallocated balance to the Priority Hub in Gemini Notebook.
+</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 5: Worksheet -->
+        <div class="ws-tab-content" id="tab-content-4-worksheet">
+          <div class="readable-card">
+            <div class="prompt-box">
+              <div class="prompt-box-header">
+                <span class="prompt-box-title"><span>📝</span> CHAMBER 04 MASTER LAUNCH PROTOCOL</span>
+                <button class="btn-shelf-action btn-shelf-copy" onclick="copyDossier('room4_worksheet', this)">📋 Copy</button>
+              </div>
+              <pre class="prompt-code-text"># 📝 Squad Worksheet: Chamber 04 &amp; Master Launch (Hard Mode)
+### Squad Name: _______________________
+### Time Started: _________ | Time Completed: _________
+
+---
+
+## Part 1: NotebookLM Studio Deliverables
+- [ ] Ingested all 4 dossiers into NotebookLM.
+- [ ] **Slide Generation**: Generated a **Slide Deck / Presentation** in NotebookLM Studio.
+- [ ] **Video Generation**: Generated a **Video Overview (Narrated Presentation)** in NotebookLM Studio.
+- [ ] Reconciled 12,000-unit inventory across Milan, New York, and Tokyo in Gemini Notebook.
+
+---
+
+## Part 2: Inventory Optimization Calculation
+Reconcile the 12,000-unit global allocation:
+
+| Flagship Hub / City | Pre-Orders | Return Rate | Allocated Units | Status |
+| :--- | :---: | :---: | :---: | :--- |
+| **Milan (EMEA)** | 4,100 | 6.2% | **3,000** | Balanced Heritage |
+| **New York (Americas)** | 6,200 | 18.4% | **4,000** | Capped for Return Risk |
+| **Tokyo (APAC)** | 7,850 | **2.1%** | **[Reconcile in Gemini Notebook]** | **PRIORITY HUB** (95% Sell-Through) |
+| **TOTAL RECONCILED** | -- | -- | **12,000** | 100% Launch Inventory Allocated |
+
+- Priority Hub Key: [Identified Hub + Calculated Units in Gemini Notebook].
+
+---
+
+## Part 3: Master Deployment Cipher Assembly
+
+Assemble the Master Launch Code according to the executive protocol:
+
+$$\text{Cipher} = [\text{PRIORITY\_HUB\_UNITS}] - [\text{STUDIO\_DELIVERABLES}]$$
+
+$$\text{Cipher} = \mathbf{[HUB][UNITS]\text{-}SLIDES\text{-}VIDEO}$$
+
+&gt; ⚡ **MASTER DEPLOYMENT CIPHER FORMAT**: `[PRIORITY_HUB_UNITS]-SLIDES-VIDEO`  
+&gt; *(Format example: `[HUB][UNITS]-SLIDES-VIDEO`, e.g. `MILAN3000-SLIDES-VIDEO` if Milan were the priority hub)*  
+&gt; Enter this cipher into Chamber 04 on `index.html` to stop the timer, reverse the breach, and launch the collection!
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Decryption Pad & Deductions -->
+      <div class="decryptor-pane">
+        <div class="decryptor-card">
+          <div class="decryptor-header">
+            <div class="decryptor-badge">CHAMBER 04 • MASTER RUNWAY VAULT</div>
+            <h3 class="decryptor-title">Global Runway Authorization</h3>
+          </div>
+
+
+
+          <!-- Input Box -->
+          <div class="input-form-box">
+            <label class="input-label" for="cipher-input-4">ENTER MASTER RUNWAY CIPHER:</label>
+            <input type="text" id="cipher-input-4" class="cipher-input-field" placeholder="HUBUNITS-SLIDES-VIDEO (e.g. TOKYOXXXX-SLIDES-VIDEO)" autocomplete="off" spellcheck="false">
+            <button class="btn-decrypt btn-decrypt-master" onclick="verifyChamber(4)">⚡ DEPLOY RUNWAY COLLECTION</button>
+            <div class="feedback-msg" id="feedback-4"></div>
+          </div>
+
+          <!-- Hint System -->
+          <div class="hint-deck">
+            <div class="hint-header">
+              <span class="hint-notice">STUCK? (-3:00 PENALTY PER HINT)</span>
+              <button class="btn-hint-req" onclick="requestHint(4)">REQUEST HINT</button>
+            </div>
+            <div class="hint-display-area" id="hint-display-4"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <!-- Global Dossier & Document Reader Modal -->
+  <div class="dossier-modal-overlay" id="dossier-modal">
+    <div class="dossier-modal-card">
+      <div class="dossier-modal-header">
+        <div class="dossier-modal-title">
+          <span>📚</span> MAISON SOLARIS MISSION DOSSIERS &amp; ARTIFACTS
+        </div>
+        <button class="btn-close-modal" onclick="closeDossierModal()" title="Close Dossier Viewer">✕</button>
+      </div>
+
+      <div class="dossier-modal-body">
+        <!-- Sidebar Navigation -->
+        <aside class="dossier-sidebar">
+          <div class="dossier-group-label">PDF Knowledge Bases</div>
+          <button class="dossier-tab-btn" data-doc="pdf_blueprints" onclick="switchDossierTab('pdf_blueprints')">
+            <span>📄</span> Blueprints PDF (Ch. 1)
+          </button>
+          <button class="dossier-tab-btn" data-doc="pdf_sop" onclick="switchDossierTab('pdf_sop')">
+            <span>📄</span> Brand Safety SOP (Ch. 3)
+          </button>
+
+          <div class="dossier-group-label">Gemini Custom Gems</div>
+          <button class="dossier-tab-btn active" data-doc="gem1_prompt" onclick="switchDossierTab('gem1_prompt')">
+            <span>💎</span> Gem 01: Merchandiser
+          </button>
+          <button class="dossier-tab-btn" data-doc="gem2_prompt" onclick="switchDossierTab('gem2_prompt')">
+            <span>💎</span> Gem 02: Care Guardian
+          </button>
+          <button class="dossier-tab-btn" data-doc="gem3_prompt" onclick="switchDossierTab('gem3_prompt')">
+            <span>💎</span> Gem 03: Allocator
+          </button>
+
+          <div class="dossier-group-label">NotebookLM Sources</div>
+          <button class="dossier-tab-btn" data-doc="source1_mido" onclick="switchDossierTab('source1_mido')">
+            <span>📚</span> 01. MIDO Trend Report
+          </button>
+          <button class="dossier-tab-btn" data-doc="source2_bioacetate" onclick="switchDossierTab('source2_bioacetate')">
+            <span>📚</span> 02. Bio-Acetate Audit
+          </button>
+          <button class="dossier-tab-btn" data-doc="source3_ergonomics" onclick="switchDossierTab('source3_ergonomics')">
+            <span>📚</span> 03. Ergonomics Guide
+          </button>
+          <button class="dossier-tab-btn" data-doc="source4_sentiment" onclick="switchDossierTab('source4_sentiment')">
+            <span>📚</span> 04. Regional Sentiment
+          </button>
+
+          <div class="dossier-group-label">Raw Factory Data &amp; PR</div>
+          <button class="dossier-tab-btn" data-doc="raw_specs" onclick="switchDossierTab('raw_specs')">
+            <span>⚙️</span> Prototype #881 Spec
+          </button>
+          <button class="dossier-tab-btn" data-doc="influencer_thread" onclick="switchDossierTab('influencer_thread')">
+            <span>📱</span> Leaked Influencer DM
+          </button>
+          <button class="dossier-tab-btn" data-doc="brand_playbook" onclick="switchDossierTab('brand_playbook')">
+            <span>🛡️</span> PR Tone Playbook
+          </button>
+          <button class="dossier-tab-btn" data-doc="allocation_csv" onclick="switchDossierTab('allocation_csv')">
+            <span>📊</span> Allocation Matrix CSV
+          </button>
+
+          <div class="dossier-group-label">Worksheets &amp; Handouts</div>
+          <button class="dossier-tab-btn" data-doc="room1_worksheet" onclick="switchDossierTab('room1_worksheet')">
+            <span>📝</span> Ch. 1 Worksheet
+          </button>
+          <button class="dossier-tab-btn" data-doc="room2_tasks" onclick="switchDossierTab('room2_tasks')">
+            <span>📝</span> Ch. 2 Forensic Tasks
+          </button>
+          <button class="dossier-tab-btn" data-doc="room3_worksheet" onclick="switchDossierTab('room3_worksheet')">
+            <span>📝</span> Ch. 3 Testing Sheet
+          </button>
+          <button class="dossier-tab-btn" data-doc="room4_worksheet" onclick="switchDossierTab('room4_worksheet')">
+            <span>📝</span> Ch. 4 Master Protocol
+          </button>
+          <button class="dossier-tab-btn" data-doc="gems_cheatsheet" onclick="switchDossierTab('gems_cheatsheet')">
+            <span>💡</span> Gems Quick Reference
+          </button>
+          <button class="dossier-tab-btn" data-doc="notebooklm_guide" onclick="switchDossierTab('notebooklm_guide')">
+            <span>💡</span> NotebookLM Quick Guide
+          </button>
+          <button class="dossier-tab-btn" data-doc="scorecard" onclick="switchDossierTab('scorecard')">
+            <span>🏆</span> Squad Scorecard
+          </button>
+        </aside>
+
+        <!-- Document Viewer Content Area -->
+        <section class="dossier-content-area">
+          <div class="dossier-toolbar">
+            <h4 class="dossier-doc-title" id="dossier-doc-title">Document Title</h4>
+            <div class="dossier-doc-actions">
+              <button class="btn-shelf-action btn-shelf-copy" id="btn-modal-copy-doc" onclick="copyCurrentModalDoc()">
+                📋 Copy All Text
+              </button>
+              <a href="#" class="btn-shelf-action btn-shelf-pdf" id="btn-modal-download-pdf" style="display:none;" download>
+                📥 Download PDF Document
+              </a>
+            </div>
+          </div>
+          <pre class="dossier-viewer" id="dossier-viewer">Select a document from the left sidebar to view.</pre>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-notification" class="toast-notification">Notification</div>
 
   <!-- Victory Modal -->
   <div class="modal-overlay" id="victory-modal">
@@ -285,9 +1353,7 @@
       <h1 class="victory-title">VAULT BREACH REVERSED!</h1>
       <h3 class="victory-subtitle">THE SOLSTICE COLLECTION IS LIVE ON THE RUNWAY</h3>
       <p class="victory-message">
-        Congratulations! Your squad successfully mastered <strong>Gemini App Custom Gems</strong> and 
-        <strong>Gemini Notebook (NotebookLM)</strong> to standardize optical taxonomy, eliminate compliance hallucinations, 
-        defuse a viral fit crisis, and orchestrate global inventory allocation under intense pressure.
+        Exceptional work! Your squad mastered <strong>Gemini App Gems</strong> (with default tools like <strong>Nano Banana Image Generation</strong> and internal PDF Knowledge) as well as <strong>Gemini Notebook (NotebookLM)</strong> (generating <strong>Audio Podcasts, Investigative Q&amp;A, Slide Decks, and Video Overviews</strong>).
       </p>
 
       <div class="score-summary-grid">
@@ -300,7 +1366,7 @@
           <div class="score-lbl">HINTS USED</div>
         </div>
         <div class="score-card">
-          <div class="score-val" id="score-rank">HAUTE COUTURE PRO</div>
+          <div class="score-val" id="score-rank">HAUTE COUTURE MASTER</div>
           <div class="score-lbl">SQUAD RANK</div>
         </div>
       </div>
@@ -316,12 +1382,12 @@
   <aside class="facilitator-drawer" id="facilitator-drawer">
     <div class="drawer-toggle" onclick="toggleFacilitatorDrawer()">⚙️ FACILITATOR OVERRIDE</div>
     <div class="drawer-content">
-      <h4>FACILITATOR CHEAT SHEET</h4>
+      <h4>FACILITATOR CHEAT SHEET (HARD MODE)</h4>
       <ul>
-        <li>Room 1 Key: <code>SOLAR</code></li>
-        <li>Room 2 Key: <code>CAT3-M49</code></li>
-        <li>Room 3 Key: <code>BRIDGEFIT26</code></li>
-        <li>Room 4 Key: <code>MIDNIGHT-LUMINA-2026</code></li>
+        <li>Room 1 Key: <code>TITAN-54-18-950</code></li>
+        <li>Room 2 Key: <code>ISO14855-DELTA49-CAT3</code></li>
+        <li>Room 3 Key: <code>GUARD-BRIDGEFIT26-PRO</code></li>
+        <li>Room 4 Key: <code>TOKYO5000-SLIDES-VIDEO</code> (or <code>MIDNIGHT-TOKYO5000-SLIDES-VIDEO</code>)</li>
       </ul>
       <div class="drawer-actions">
         <button onclick="unlockAllRooms()">Unlock All Chambers</button>
@@ -330,6 +1396,8 @@
     </div>
   </aside>
 
+  <!-- Scripts -->
+  <script src="assets/js/dossiers-data.js"></script>
   <script src="assets/js/terminal.js"></script>
 </body>
 </html>

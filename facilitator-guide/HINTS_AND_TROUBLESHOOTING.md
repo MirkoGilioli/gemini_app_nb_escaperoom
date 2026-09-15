@@ -1,71 +1,62 @@
-# 💡 Tiered Hints & Troubleshooting Playbook
+# 💡 Facilitator Hints & Troubleshooting Playbook (Hard Mode)
+### Maison Solaris: The Midnight Runway Lockdown
 
-This guide contains the exact hint progression for each room. In the interactive terminal (`index.html`), requesting a hint automatically logs a **3-minute time deduction**. Facilitators can also provide these verbal hints when roaming between squads.
-
----
-
-## 🚪 Chamber 01: Scrambled Optical Catalog
-
-### When Squads are Stuck:
-- **Symptom**: Squad is stuck prompting Gemini with generic questions like *"What is the password?"*
-- **Diagnosis**: They haven't set up the custom Gem with System Instructions.
-- **Action**: Direct them to `gem-library/01_eyewear_catalog_gem.md` and instruct them to copy the system prompt into the Gemini Gem manager.
-
-### Hint Tiers:
-* **Tier 1 (Nudge - 3m penalty)**:
-  > *"Examine the structured metadata tags requested in the student worksheet. The prompt instructions require you to label 5 core optical attributes."*
-* **Tier 2 (Clue - 3m penalty)**:
-  > *"Look at the first letters of each standardized attribute key: [S]ilhouette, [O]ptical fit, [L]ens tech, [A]cetate origin, [R]ating UV. Put those 5 initials together."*
-* **Tier 3 (Full Reveal - 3m penalty)**:
-  > *"The override cipher for Chamber 01 is `SOLAR`."*
+> ⏱️ **Penalty Policy**: Each revealed hint incurs a **3-minute penalty** deducted from the squad's mission clock.
 
 ---
 
-## 🚪 Chamber 02: Bio-Acetate & Compliance Archive
+## 🚪 Chamber 01: The Scrambled Optical Catalog
+**Focus**: Gemini Gems, Nano Banana Image Generation, PDF Knowledge Upload.
 
-### When Squads are Stuck:
-- **Symptom**: The squad is searching Google or asking Gemini general questions and getting conflicting answers about sunglasses categories.
-- **Diagnosis**: They haven't created a Notebook in NotebookLM or haven't uploaded the two markdown source files.
-- **Action**: Remind them: *"This room requires Gemini Notebook (NotebookLM). General AI does not have Maison Solaris's private supplier audit!"*
+* **Tier 1 (Nudge)**:
+  *"Have you uploaded `Maison_Solaris_Technical_Blueprints.pdf` into the Gem's Knowledge section and enabled Image Generation (Nano Banana)? Look at Section 3 of the PDF for the formula."*
+* **Tier 2 (Clue)**:
+  *"The formula is `TITAN-[LENS]-[BRIDGE]-[TENSILE]`. Check the prototype notes for the lens (54) and bridge (18), and check Section 2 of the Blueprints PDF for Grade-5 Beta Titanium's ultimate tensile strength (950 MPa)."*
+* **Tier 3 (Full Reveal)**:
+  *"The Chamber 01 override cipher is: `TITAN-54-18-950`."*
 
-### Hint Tiers:
-* **Tier 1 (Nudge - 3m penalty)**:
-  > *"Ask your NotebookLM notebook: 'What is the certified international sun lens filter category?' and 'What is Mazzucchelli's trade code for bio-acetate?' Look closely at the highlighted citations."*
-* **Tier 2 (Clue - 3m penalty)**:
-  > *"The sun lens filter category is `CAT3` (Category 3). The Mazzucchelli biodegradable acetate formula is `M49`. Combine them with a hyphen: `[LENS]-[MATERIAL]`."*
-* **Tier 3 (Full Reveal - 3m penalty)**:
-  > *"The override cipher for Chamber 02 is `CAT3-M49`."*
-
----
-
-## 🚪 Chamber 03: Virtual Try-On & PR Fit Crisis
-
-### When Squads are Stuck:
-- **Symptom**: The Gem's response either gives medical advice (e.g., *"Take an ibuprofen for headaches"*) or admits company fault without offering the correct fit solution.
-- **Diagnosis**: Missing negative constraints in the Gem's System Instructions.
-- **Action**: Have them review the "Negative Constraints & Legal Guardrails" section in `gem-library/02_optical_care_guardian_gem.md`.
-
-### Hint Tiers:
-* **Tier 1 (Nudge - 3m penalty)**:
-  > *"Review the brand tone playbook in `rooms/room-3-fit-crisis/brand_tone_playbook.md`. What specific promo code must customer care offer to arrange a free Asian/Universal fit consultation?"*
-* **Tier 2 (Clue - 3m penalty)**:
-  > *"The promo code is composed of the anatomical fit term ('BRIDGEFIT') followed by the two-digit year of the collection."*
-* **Tier 3 (Full Reveal - 3m penalty)**:
-  > *"The override cipher for Chamber 03 is `BRIDGEFIT26`."*
+### Troubleshooting:
+- *Issue*: Gem didn't generate an image.
+  - *Fix*: Ensure **Image Generation** is toggled ON under the Gem settings or instruct the Gem: *"Generate an editorial photograph of this frame on Carrara marble using Nano Banana."*
+- *Issue*: Gem hallucinated the tensile strength.
+  - *Fix*: Check that `Maison_Solaris_Technical_Blueprints.pdf` is properly uploaded into the Gem's Knowledge tab.
 
 ---
 
-## 🚪 Chamber 04: Midnight Runway Master Vault
+## 🚪 Chamber 02: The Bio-Acetate & Compliance Archive
+**Focus**: NotebookLM Audio Overview (Podcast) & Forensic Q&A with Citations.
 
-### When Squads are Stuck:
-- **Symptom**: Squad has solved the inventory split for Tokyo, but cannot find the secret collection theme phrase.
-- **Diagnosis**: They haven't triggered the NotebookLM Studio Audio Overview or generated the Briefing Doc.
-- **Action**: Guide them to open the NotebookLM Studio panel on the right side and click **"Generate Audio Overview"** or **"Briefing Doc"**.
+* **Tier 1 (Nudge)**:
+  *"Generate the Audio Overview podcast in NotebookLM Studio. Listen to the hosts discuss the 115-day composting test and runway lighting standard, then ask targeted questions in NotebookLM chat."*
+* **Tier 2 (Clue)**:
+  *"In NotebookLM chat, ask for: 1) the ISO standard for biodegradability (ISO 14855), 2) the certified batch code for M49 (DELTA-49), and 3) the mandatory runway filter category (CAT3). Assemble as `[ISO]-[BATCH]-[CAT]`."*
+* **Tier 3 (Full Reveal)**:
+  *"The Chamber 02 override cipher is: `ISO14855-DELTA49-CAT3`."*
 
-### Hint Tiers:
-* **Tier 1 (Nudge - 3m penalty)**:
-  > *"In your NotebookLM Studio panel, generate the Audio Overview or the executive Briefing Doc. Listen to or read the first two minutes: the hosts discuss the runway capsule's secret code name."*
-* **Tier 2 (Clue - 3m penalty)**:
-  > *"The formula is `[RUNWAY_THEME]-[CAPSULE_CODE]-[YEAR]`. The theme is MIDNIGHT, the hero design code is LUMINA, and the year is 2026."*
-* **Tier 3 (Full Reveal - 3m penalty)**:
-  > *"The Master Deployment cipher for Chamber 04 is `MIDNIGHT-LUMINA-2026`."*
+### Troubleshooting:
+- *Issue*: Audio Overview takes 1-2 minutes to generate.
+  - *Coaching*: While the podcast generates, students can start asking chat questions in NotebookLM to verify the ISO numbers!
+
+---
+
+## 🚪 Chamber 03: The Virtual Fit & Sizing PR Firestorm
+**Focus**: Gemini Gems, Brand Safety SOP PDF Knowledge, Negative Constraints.
+
+* **Tier 1 (Nudge)**:
+  *"Upload `Maison_Solaris_Brand_Safety_SOP.pdf` into your Optical Care Guardian Gem. Notice the statutory negative constraint: strictly decline headache prescriptions."*
+* **Tier 2 (Clue)**:
+  *"Read Section 3 of the Brand Safety SOP. When de-escalating bridge pinching, the concierge is authorized to issue the VIP resolution voucher code."*
+* **Tier 3 (Full Reveal)**:
+  *"The Chamber 03 override cipher is: `GUARD-BRIDGEFIT26-PRO`."*
+
+---
+
+## 🚪 Chamber 04: The Midnight Runway Master Vault
+**Focus**: NotebookLM Studio (Slide Decks & Video Overviews), Inventory Allocation.
+
+* **Tier 1 (Nudge)**:
+  *"In NotebookLM Studio, generate both a Slide Deck (Presentation) and a Video Overview. Check `allocation_matrix.csv` for which city has 7,850 pre-orders and only 2.1% returns."*
+* **Tier 2 (Clue)**:
+  *"Tokyo is the Priority Hub receiving 5,000 units. Combine the runway theme (MIDNIGHT), the priority hub units (TOKYO5000), and the NotebookLM Studio deliverables (SLIDES-VIDEO)."*
+* **Tier 3 (Full Reveal)**:
+  *"The Master Deployment Cipher is: `MIDNIGHT-TOKYO5000-SLIDES-VIDEO`."*

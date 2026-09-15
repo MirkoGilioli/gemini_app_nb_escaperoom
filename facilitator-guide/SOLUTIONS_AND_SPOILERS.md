@@ -1,94 +1,70 @@
-# 🤫 Solutions & Spoilers: Master Answer Key
-### For Facilitators Only — DO NOT Distribute to Participants
+# 🗝️ Master Solutions & Spoilers Manual (Hard Mode)
+### Maison Solaris: The Midnight Runway Lockdown Escape Room
+
+> ⚠️ **CONFIDENTIAL INSTRUCTOR RESOURCE**  
+> Do not distribute this document to workshop attendees. It contains the exact canonical ciphers, acceptable alternate syntaxes, mathematical reconciliations, and prompt diagnostics.
 
 ---
 
-## 🔑 Quick Reference Master Key Table
+## 🧭 Master Cipher Quick Reference
 
-| Chamber | Challenge Focus | Primary Tool | Accepted Master Ciphers |
-| :---: | :--- | :--- | :--- |
-| **01** | Scrambled Optical Catalog | Gemini App Gems | `SOLAR` *(or `SOLARIS`)* |
-| **02** | Bio-Acetate & Compliance Archive | Gemini Notebook (NotebookLM) | `CAT3-M49` *(or `CAT3M49`, `CAT 3-M49`)* |
-| **03** | Virtual Try-On & PR Fit Crisis | Gemini App Gems | `BRIDGEFIT26` *(or `BRIDGEFIT-26`)* |
-| **04** | Midnight Runway Master Vault | NotebookLM Studio + Gems | `MIDNIGHT-LUMINA-2026` |
+| Chamber | Challenge Title | AI Tool Focus | Canonical Cipher | Alternative Accepted Inputs |
+| :---: | :--- | :--- | :---: | :--- |
+| **01** | The Scrambled Optical Catalog | Gemini Gems + **Nano Banana** & **PDF Knowledge** | `TITAN-54-18-950` | `TITAN-54-18-950TI`, `TITAN5418950` |
+| **02** | The Bio-Acetate & Compliance Archive | NotebookLM: **Audio Podcast** & **Forensic Q&A** | `ISO14855-DELTA49-CAT3` | `ISO-14855-DELTA-49-CAT-3`, `ISO14855-M49-CAT3` |
+| **03** | The PR Fit & Sizing Firestorm | Gemini Gems: **Brand Safety PDF** & Guardrails | `GUARD-BRIDGEFIT26-PRO` | `GUARD-BRIDGEFIT26`, `BRIDGEFIT26` |
+| **04** | The Midnight Runway Master Vault | NotebookLM Studio: **Slides** & **Video Generation** | `MIDNIGHT-TOKYO5000-SLIDES-VIDEO` | `MIDNIGHT-TOKYO5K-SLIDES-VIDEO`, `MIDNIGHT-TOKYO5000` |
 
 ---
 
-## 🔍 Detailed Chamber Solutions
+## 🚪 Detailed Chamber Walkthroughs
 
 ### Chamber 01: The Scrambled Optical Catalog
-* **Input File**: `rooms/room-1-frame-chaos/raw_factory_specs.txt`
-* **Gem Used**: `gem-library/01_eyewear_catalog_gem.md` (Luxury Eyewear Merchandiser Gem)
-* **Puzzle Logic**:
-  The student's worksheet (`rooms/room-1-frame-chaos/student_worksheet.md`) instructs the Gem to output structured taxonomy tags for *The Solstice Aviator*.
-  Specifically, 5 standardized attribute keys must be extracted:
-  1. **S**ilhouette: Aviator / Teardrop Pilot
-  2. **O**ptical Fit: 54-18-145 (Lens 54mm, Bridge 18mm, Temple 145mm)
-  3. **L**ens Technology: Polarized CR-39 Anti-Reflective
-  4. **A**cetate / Material Origin: Belluno, Italy (Grade-5 Titanium + Bio-Acetate)
-  5. **R**ating UV: Category 3 (UV400)
-  
-  Taking the first letter of each attribute: **S - O - L - A - R**.
-* **Accepted Cipher**: `SOLAR`
+* **The Goal**: Create the *Luxury Eyewear Merchandiser Gem* in Gemini App, enable **Nano Banana (Image Generation)**, and upload `gem-library/knowledge-pdfs/Maison_Solaris_Technical_Blueprints.pdf` as Knowledge.
+* **Input Data**: Raw engineering notes for Prototype #881 (`The Solstice Aviator`) from `rooms/room-1-frame-chaos/raw_factory_specs.txt`.
+* **Deduction Steps**:
+  1. Lens Width: 54 mm.
+  2. Bridge Width (DBL): 18 mm.
+  3. Knowledge PDF Section 2: Grade-5 Beta Titanium Ultimate Tensile Strength = `950 MPa`.
+  4. Knowledge PDF Section 3 Formula: `TITAN-[LENS]-[BRIDGE]-[TENSILE]`.
+  5. The resulting cipher is: **`TITAN-54-18-950`**.
+* **Visual Deliverable**: Gem invokes Nano Banana to generate a photorealistic luxury editorial render of the aviator resting on Carrara marble under Milan runway lighting.
 
 ---
 
-### Chamber 02: The Bio-Acetate & Runway Compliance Archive
-* **Input Files Ingested in NotebookLM**:
-  - `notebook-sources/01_mido_eyewear_trend_report.md`
-  - `notebook-sources/02_bio_acetate_material_audit.md`
-* **Puzzle Logic**:
-  Participants query their NotebookLM notebook with the forensic questions in `rooms/room-2-trend-dossier/notebook_tasks.md`:
-  1. *Question 1*: "What is the certified international sun lens filter category required for the Milan outdoor daylight runway?"
-     - *NotebookLM Grounded Citation*: Category 3 (CAT3), allowing 8% to 18% light transmission, meeting EN ISO 12312-1 standards.
-  2. *Question 2*: "What is the exact proprietary formula code of Mazzucchelli's certified biodegradable cellulose acetate?"
-     - *NotebookLM Grounded Citation*: M49 (100% biodegradable and recyclable according to ISO 14855).
-  
-  The formula requested on the worksheet is `[LENS_CATEGORY]-[MATERIAL_CODE]`.
-* **Accepted Cipher**: `CAT3-M49`
+### Chamber 02: The Bio-Acetate & Compliance Archive
+* **The Goal**: Upload `01_mido_eyewear_trend_report.md` and `02_bio_acetate_material_audit.md` into NotebookLM.
+* **Audio Podcast Activity**: Click **Audio Overview** in NotebookLM Studio to generate the 2-host AI podcast. The hosts debate the tension between 115-day composting degradation and runway solar filter compliance.
+* **Forensic Q&A Activity**:
+  Students ask targeted questions in NotebookLM chat to extract:
+  1. *Biodegradation standard*: ISO 14855 (`ISO14855`).
+  2. *Certified spectroscopic batch code*: `DELTA-49` (`DELTA49`).
+  3. *Mandatory runway sun lens category*: Category 3 (`CAT3`).
+* **Formula**: `[ISO_STANDARD]-[BATCH_CODE]-[FILTER_CAT]`.
+* **The resulting cipher**: **`ISO14855-DELTA49-CAT3`**.
 
 ---
 
 ### Chamber 03: The Virtual Fit & Sizing PR Firestorm
-* **Input Scenario**: `rooms/room-3-fit-crisis/leaked_influencer_thread.md`
-* **Gem Used**: `gem-library/02_optical_care_guardian_gem.md` (Optical Care Guardian Gem)
-* **Puzzle Logic**:
-  The participant must configure the Gem with specific brand guardrails:
-  - Disclose that the brand frames use medical-grade, hypoallergenic silicone nose pads and nickel-free beta-titanium.
-  - Never provide medical advice on headaches or nasal redness; advise consulting a certified optometrist.
-  - To make amends and provide proactive customer care, offer the customer a complimentary personalized fitting consultation at any flagship store or digital optician with the promo code specified in the brand playbook: `BRIDGEFIT26` (Bridge Fit 2026).
-  
-  When testing the Gem with the simulated influencer customer prompt, the Gem must output this exact voucher code in its response.
-* **Accepted Cipher**: `BRIDGEFIT26`
+* **The Goal**: Build the *Optical Care Guardian Gem* in Gemini App and upload `gem-library/knowledge-pdfs/Maison_Solaris_Brand_Safety_SOP.pdf` as Knowledge.
+* **Input Data**: Angry influencer DM from `@chloevance_style` claiming bridge pinching, dents, and headaches, and demanding medication.
+* **Evaluation & Guardrail Validation**:
+  1. Negative constraint check: Gem **refuses** to prescribe headache pills or diagnose allergies.
+  2. Material reassurance: Reaffirms medical-grade vulcanized liquid silicone (ISO 10993-5) and nickel-free titanium.
+  3. Anatomical fit remedy: Explains low-bridge mismatch and offers Universal Low-Bridge Fit with 7.2mm gooseneck pad arms.
+  4. SOP Authorization: Section 3 authorizes the emergency concierge voucher code: **`GUARD-BRIDGEFIT26-PRO`**.
 
 ---
 
 ### Chamber 04: The Midnight Runway Master Vault
-* **Input Files**:
-  - `notebook-sources/04_regional_preorder_sentiment.md` (uploaded to NotebookLM)
-  - `rooms/room-4-vault-launch/allocation_matrix.csv`
-  - `gem-library/03_merchandise_allocator_gem.md`
-* **Puzzle Logic**:
-  This final room integrates both tools:
-  1. **NotebookLM Audio Overview / Studio Briefing**: In the generated Audio Overview podcast or Briefing Doc, the AI co-hosts discuss the hero collection code name and runway theme: *"Midnight Lumina"*.
-  2. **Inventory Optimization Gem**: The squad runs the allocation data through the Gem. The data shows:
-     - **Milan**: 3,000 units (high local prestige, 82% pre-order rate).
-     - **New York**: 4,000 units (high volume, 22% return risk for oversized frames).
-     - **Tokyo**: 5,000 units (highest demand for titanium ultra-lightweight + universal bridge fit, 95% sell-through forecast, lowest 2.1% return rate).
-  3. **The Master Password Formula**:
-     - Format: `[RUNWAY_THEME]-[CAPSULE_CODE]-[YEAR]`
-     - Theme: `MIDNIGHT`
-     - Capsule Code: `LUMINA`
-     - Year: `2026`
-* **Accepted Cipher**: `MIDNIGHT-LUMINA-2026`
-
----
-
-## 💡 Troubleshooting Common Player Mistakes
-
-1. **Typos & Formatting**:
-   The validation console script trims whitespace and is case-insensitive, but hyphens matter in `CAT3-M49` and `MIDNIGHT-LUMINA-2026`. If players enter `CAT 3 M49` or `MIDNIGHTLUMINA2026`, the regex in `terminal.js` accepts the most common variations.
-2. **NotebookLM Hallucinations**:
-   If players use regular web chat instead of NotebookLM, generic Gemini may guess random sunglasses categories (e.g., Cat 2 or Cat 4). Emphasize that **only NotebookLM grounded on the uploaded lab audit** contains the exact Maison Solaris specs.
-3. **Timer Expiration**:
-   If a team runs out of time, use the facilitator drawer to add 5 or 15 minutes, allowing them to experience the satisfying Room 4 breakthrough.
+* **The Goal**: Use Gemini Notebook (NotebookLM) Studio tools for **Slide Generation** and **Video Generation**, and reconcile global launch inventory.
+* **NotebookLM Studio Activities**:
+  1. Ingest `03_optical_fit_ergonomics_guide.md` and `04_regional_preorder_sentiment.md`.
+  2. Click **Slide Deck / Presentation** in the Studio panel to generate the executive board launch deck.
+  3. Click **Video Overview (Narrated Presentation)** in the Studio panel to generate the AI slideshow video for runway screens.
+* **Multi-Constraint Inventory Optimization**:
+  From `allocation_matrix.csv`, squads reconcile 12,000 units across Milan (3,000), New York (4,000), and Tokyo:
+  - Tokyo has 7,850 waitlist pre-orders, the lowest return rate (2.1%), and highest sell-through (95%).
+  - Tokyo is designated the **Priority Hub** and receives **5,000 units** (`TOKYO5000`).
+* **Master Cipher Formula**:
+  `[RUNWAY_THEME]-[PRIORITY_HUB_UNITS]-[STUDIO_DELIVERABLES]` = **`MIDNIGHT-TOKYO5000-SLIDES-VIDEO`**.

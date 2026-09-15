@@ -1,4 +1,4 @@
-# 🏆 Escape Room Squad Scorecard
+# 🏆 Escape Room Squad Scorecard (Hard Mode)
 ### Maison Solaris: The Midnight Runway Lockdown
 
 ---
@@ -7,9 +7,9 @@
 - **Squad Name / Table #**: ___________________________________________
 - **Team Members & Roles**:
   - Member 1 (Merchandising Lead): __________________________________
-  - Member 2 (Prompt Engineer / Gems): ______________________________
-  - Member 3 (NotebookLM Researcher): _______________________________
-  - Member 4 (PR / Customer Care): __________________________________
+  - Member 2 (Prompt Architect / Gems & Nano Banana): ________________
+  - Member 3 (NotebookLM Studio & Audio/Video Lead): _________________
+  - Member 4 (PR Crisis & Brand Safety Guardian): ___________________
 
 ---
 
@@ -17,10 +17,10 @@
 
 | Chamber | Challenge Focus | Unlock Cipher Entered | Hints Used (0–3) | Time Completed |
 | :---: | :--- | :---: | :---: | :---: |
-| **01** | Optical Catalog Specs *(Gemini Gems)* | `___________` | [ ] [ ] [ ] | `____:____` |
-| **02** | Bio-Acetate & Compliance *(NotebookLM)*| `___________` | [ ] [ ] [ ] | `____:____` |
-| **03** | PR Fit Crisis *(Gemini Gems)* | `___________` | [ ] [ ] [ ] | `____:____` |
-| **04** | Master Vault *(NotebookLM + Gems)* | `___________` | [ ] [ ] [ ] | `____:____` |
+| **01** | Optical Catalog *(Gemini Gems + Nano Banana + Blueprints PDF)* | `___________` | [ ] [ ] [ ] | `____:____` |
+| **02** | Bio-Acetate Audit *(NotebookLM Audio Podcast & Q&A)* | `___________` | [ ] [ ] [ ] | `____:____` |
+| **03** | PR Fit Crisis *(Gemini Gems + Brand Safety SOP PDF)* | `___________` | [ ] [ ] [ ] | `____:____` |
+| **04** | Master Vault *(NotebookLM Slides & Video Generation)* | `___________` | [ ] [ ] [ ] | `____:____` |
 
 ---
 
@@ -33,6 +33,6 @@ $$\text{Final Score} = (\text{Remaining Time in Seconds}) - (\text{Total Hints U
 - **Net Adjusted Time**: `______:______`
 
 ### 🏅 Squad Honor Roll:
-- 🌟 **30:00+ Remaining & 0 Hints**: *Master Eyewear Alchemist*
-- 🕶️ **15:00+ Remaining & $\le$ 2 Hints**: *Executive Optical Director*
-- 🥂 **Cleared before 00:00**: *Haute Couture Survivor*
+- 🌟 **Grand Master Optical Alchemist**: 30:00+ remaining & 0 hints
+- 🕶️ **Executive Runway Director**: 15:00+ remaining & $\le$ 2 hints
+- 🥂 **Haute Couture Survivor**: Cleared before 00:00

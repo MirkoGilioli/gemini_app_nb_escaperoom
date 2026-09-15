@@ -1,0 +1,9 @@
+.git
+.gitignore
+.DS_Store
+*.log
+.system_generated/
+scratch/
+test*
+# Keep facilitator spoilers private from public web container
+facilitator-guide/

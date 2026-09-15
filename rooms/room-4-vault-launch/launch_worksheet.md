@@ -1,37 +1,39 @@
-# 📝 Squad Worksheet: Chamber 04 & Master Launch
+# 📝 Squad Worksheet: Chamber 04 & Master Launch (Hard Mode)
 ### Squad Name: _______________________
 ### Time Started: _________ | Time Completed: _________
 
 ---
 
-## Step 1: NotebookLM Studio Synthesis
-- [ ] Added `04_regional_preorder_sentiment.md` into NotebookLM.
-- [ ] Generated an **Audio Overview** (or Briefing Doc) in the Studio panel.
-- [ ] Identified the collection's secret runway launch theme code:
-  - **Runway Theme**: `MIDNIGHT`
-  - **Capsule Hero Name**: `LUMINA`
+## Part 1: NotebookLM Studio Deliverables
+- [ ] Ingested all 4 dossiers into Gemini Notebook (NotebookLM).
+- [ ] **Slide Generation**: Generated a **Slide Deck / Presentation** in Gemini Notebook Studio.
+- [ ] **Video Generation**: Generated a **Video Overview (Narrated Presentation)** in Gemini Notebook Studio.
+- [ ] **Reconcile Inventory**: Reconciled the 12,000-unit global inventory across Milan, New York, and Tokyo in Gemini Notebook.
 
 ---
 
-## Step 2: Inventory Decision Allocator Gem Output
-Confirm the reconciled 12,000-unit distribution:
+## Part 2: Inventory Optimization Calculation
+Reconcile the 12,000-unit global allocation inside Gemini Notebook:
 
-| Hub / City | Units Allocated | Justification / Return Risk Profile |
-| :--- | :---: | :--- |
-| **Milan (EMEA)** | 3,000 | Stable European heritage demand; in-boutique fitting adjustments. |
-| **New York (Americas)** | 4,000 | High volume, but capped to avoid margin erosion from 18.4% return rate. |
-| **Tokyo (APAC)** | 5,000 | **Priority Market**: 7,850 waitlist, 95% sell-through, lowest 2.1% returns. |
-| **TOTAL** | **12,000** | Reconciled 100% of available runway inventory. |
+| Flagship Hub / City | Pre-Orders | Return Rate | Allocated Units | Status |
+| :--- | :---: | :---: | :---: | :--- |
+| **Milan (EMEA)** | 4,100 | 6.2% | **3,000** | Balanced Heritage |
+| **New York (Americas)** | 6,200 | 18.4% | **4,000** | Capped for Return Risk |
+| **Tokyo (APAC)** | 7,850 | **2.1%** | **[Reconcile in Gemini Notebook]** | **PRIORITY HUB** (95% Sell-Through) |
+| **TOTAL RECONCILED** | -- | -- | **12,000** | 100% Launch Inventory Allocated |
+
+- Priority Hub Key: [Identified Hub + Calculated Units in Gemini Notebook].
 
 ---
 
-## Step 3: Master Deployment Cipher Formulation
+## Part 3: Master Deployment Cipher Assembly
 
 Assemble the Master Launch Code according to the executive protocol:
 
-$$\text{Cipher} = [\text{RUNWAY\_THEME}] - [\text{CAPSULE\_CODE}] - [\text{YEAR}]$$
+$$\text{Cipher} = [\text{PRIORITY\_HUB\_UNITS}] - [\text{STUDIO\_DELIVERABLES}]$$
 
-$$\text{Cipher} = \mathbf{MIDNIGHT\text{-}LUMINA\text{-}2026}$$
+$$\text{Cipher} = \mathbf{[HUB][UNITS]\text{-}SLIDES\text{-}VIDEO}$$
 
-> ⚡ **MASTER DEPLOYMENT CIPHER**: `MIDNIGHT-LUMINA-2026`  
+> ⚡ **MASTER DEPLOYMENT CIPHER FORMAT**: `[PRIORITY_HUB_UNITS]-SLIDES-VIDEO` (e.g. `TOKYO5000-SLIDES-VIDEO`)  
+> *(Alternatives accepted: `TOKYO5000-SLIDES-VIDEO`, `TOKYO-5000-SLIDES-VIDEO`, `TOKYO5K-SLIDES-VIDEO`, `MIDNIGHT-TOKYO5000-SLIDES-VIDEO`)*  
 > Enter this cipher into Chamber 04 on `index.html` to stop the timer, reverse the breach, and launch the collection!
