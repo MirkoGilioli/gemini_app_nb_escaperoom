@@ -105,15 +105,23 @@ const CHAMBER_KEYS = {
   1: 'TITAN-54-18-950',
   2: 'ISO14855-DELTA49-CAT3',
   3: 'GUARD-BRIDGEFIT26-PRO',
-  4: 'MIDNIGHT-TOKYO5000-SLIDES-VIDEO'
+  4: 'TOKYO5000-SLIDES-VIDEO'
+};
+
+// Alternative accepted ciphers per room
+const CHAMBER_ALT_KEYS = {
+  1: ['TITAN-54-18-950', 'TITAN-54-18-950TI'],
+  2: ['ISO14855-DELTA49-CAT3', 'ISO-14855-DELTA49-CAT3'],
+  3: ['GUARD-BRIDGEFIT26-PRO', 'GUARD-BRIDGEFIT26', 'BRIDGEFIT26', 'BRIDGEFIT2026-PRO'],
+  4: ['TOKYO5000-SLIDES-VIDEO', 'TOKYO-5000-SLIDES-VIDEO', 'TOKYO5K-SLIDES-VIDEO', 'MIDNIGHT-TOKYO5000-SLIDES-VIDEO', 'MIDNIGHT-TOKYO-5000-SLIDES-VIDEO']
 };
 
 // Progressive Hint System (-3 min penalty per tier)
 const CHAMBER_HINTS = {
   1: [
     "Look at the Raw Spec #881: The boxing dimensions are 'Eye 54' and 'Bridge 18'.",
-    "Open the Technical Blueprints PDF: Grade-5 Beta Titanium Ultimate Tensile Strength is explicitly listed as 950 MPa.",
-    "Assembly Formula: TITAN-[LENS]-[BRIDGE]-[TENSILE] => TITAN-54-18-950"
+    "Open the Technical Blueprints PDF: Grade-5 Beta Titanium Ultimate Tensile Strength is explicitly listed in Section 2.",
+    "Assembly Formula: [CHASSIS_PREFIX]-[LENS]-[BRIDGE]-[TENSILE] => TITAN-54-18-950"
   ],
   2: [
     "In NotebookLM, run Audio Overview on both sources. The hosts debate the industrial composting standard and runway lighting.",
@@ -122,13 +130,13 @@ const CHAMBER_HINTS = {
   ],
   3: [
     "Enforce Gem 02 negative constraints: strict refusal of headache medicine / clinical diagnosis. Biocompatibility: ISO 10993-5.",
-    "Examine Brand Safety SOP Section 3: The authorized VIP emergency replacement voucher is for Bridge Fit 2026 Pro.",
-    "Assembly Formula: GUARD-BRIDGEFIT26-PRO"
+    "Examine Brand Safety SOP Section 3: The authorized VIP emergency replacement voucher is designated for bridge fit.",
+    "Assembly Formula: The code starts with GUARD- and ends with -PRO. Query your Gem or inspect SOP Section 3."
   ],
   4: [
-    "Reconcile the Allocation Matrix: Milan gets 3,000, New York gets 4,000, Tokyo has highest pre-orders (7,850) and lowest returns (2.1%). Tokyo gets 5,000 units.",
-    "Remember the deliverables required in NotebookLM Studio: Slide Deck (SLIDES) and Video Overview (VIDEO). Theme is MIDNIGHT.",
-    "Assembly Formula: MIDNIGHT-TOKYO5000-SLIDES-VIDEO"
+    "Reconcile the Allocation Matrix in Gemini Notebook: Milan gets 3,000, New York gets 4,000. Tokyo has lowest returns (2.1%) and highest sell-through.",
+    "Calculate Tokyo's share from the 12,000 total balance. Remember the deliverables generated in Gemini Notebook Studio: Slide Deck (SLIDES) and Video Overview (VIDEO).",
+    "Assembly Formula: [PRIORITY_HUB_UNITS]-[STUDIO_DELIVERABLES] => e.g., TOKYO5000-SLIDES-VIDEO"
   ]
 };
 
@@ -460,12 +468,14 @@ function verifyChamber(roomNum) {
 
   const enteredCode = input.value.trim().toUpperCase().replace(/\s+/g, '');
   const correctCode = CHAMBER_KEYS[roomNum];
+  const altCodes = (CHAMBER_ALT_KEYS && CHAMBER_ALT_KEYS[roomNum]) || [];
+  const isCorrect = (enteredCode === correctCode) || altCodes.includes(enteredCode);
 
   if (!timerRunning && Object.values(unlockedChambers).every(v => !v)) {
     startTimer();
   }
 
-  if (enteredCode === correctCode) {
+  if (isCorrect) {
     audio.playSuccess();
     unlockedChambers[roomNum] = true;
     input.classList.remove('input-error');

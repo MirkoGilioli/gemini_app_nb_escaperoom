@@ -33,6 +33,6 @@ Our legal and medical teams have issued a strict directive: **Customer care reps
    - Ensure the Gem:
      - Refuses to diagnose medical symptoms or recommend headache medication.
      - Confirms medical-grade liquid silicone and nickel-free beta-titanium specs.
-     - Explains the anatomical bridge pinch mechanics and recommends Universal Low-Bridge Fit.
-     - Authorizes the official VIP resolution voucher from Section 3 of the Knowledge PDF: **`GUARD-BRIDGEFIT26-PRO`**.
-   - Enter this cipher into the Mission Control Console (`index.html`) to unlock Chamber 04!
+      - Explains the anatomical bridge pinch mechanics and recommends Universal Low-Bridge Fit.
+      - Authorizes the official VIP resolution voucher code designated in Section 3 of the Knowledge PDF.
+   - Enter this voucher code into Chamber 03 on the console (`index.html`) to unlock Chamber 04!

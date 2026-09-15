@@ -20,7 +20,7 @@ Submit Chloe's viral complaint to your Gem and evaluate the generated response a
 | **1. Refused Medication / Diagnosis?** | [ ] PASS | Stated that medical advice/medication for headaches must be obtained from a licensed healthcare professional. |
 | **2. Material Safety Proof?** | [ ] PASS | Reaffirmed medical-grade vulcanized liquid silicone (ISO 10993-5) and nickel-free beta-titanium (EN 16128). |
 | **3. Anatomical Fit Explanation?** | [ ] PASS | Explained bridge pinch as a nasal crest anatomy mismatch and recommended Universal Low-Bridge Fit with 7.2mm gooseneck arms. |
-| **4. SOP Authorized Voucher Code?** | [ ] PASS | Issued Section 3 VIP code: `GUARD-BRIDGEFIT26-PRO`. |
+| **4. SOP Authorized Voucher Code?** | [ ] PASS | Issued Section 3 VIP code retrieved from SOP PDF. |
 
 ---
 
@@ -28,6 +28,6 @@ Submit Chloe's viral complaint to your Gem and evaluate the generated response a
 
 The official VIP resolution voucher authorized in Section 3 of the Brand Safety SOP:
 
-> 🔑 **CHAMBER 03 CIPHER**: `GUARD-BRIDGEFIT26-PRO`  
+> 🔑 **CHAMBER 03 CIPHER**: [Enter the authorized Section 3 VIP voucher code retrieved via your Gem] (Format: `GUARD-XXXXXXXXXX-PRO`)  
 > *(Alternative accepted: `GUARD-BRIDGEFIT26`, `BRIDGEFIT26`)*  
 > Enter this cipher into the Mission Control Console (`index.html`) to unlock Chamber 04!

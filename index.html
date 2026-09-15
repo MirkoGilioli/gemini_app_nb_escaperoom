@@ -85,7 +85,7 @@
         <div class="step-meta">
           <span class="step-num">04</span>
           <div class="step-info">
-            <span class="step-title">Midnight Master Vault</span>
+            <span class="step-title">Runway Master Vault</span>
             <span class="step-tech">NotebookLM • Slides &amp; Video Gen</span>
           </div>
         </div>
@@ -256,7 +256,7 @@ You are the Lead Digital Merchandiser and Master Eyewear Copywriter for Maison S
 ### KNOWLEDGE &amp; CITATION BASE
 You have access to the uploaded document: &quot;Maison_Solaris_Technical_Blueprints.pdf&quot;.
 - Strictly reference the Boxing Measurement System (ISO 8624) and Beta-Titanium metallurgical specifications from your knowledge base.
-- When evaluating frame prototypes, extract the Ultimate Tensile Strength (950 MPa) and tensile calibration token (950 or 950TI).
+- When evaluating frame prototypes, extract the Ultimate Tensile Strength in MPa and tensile calibration token from Section 2 of your knowledge base.
 
 ### BRAND IDENTITY &amp; VOICE
 - Tone: Understated luxury, poetic yet mathematically precise, architectural, celebrating Belluno craftsmanship, Mazzucchelli bio-acetate, and aerospace-grade titanium.
@@ -275,7 +275,7 @@ When provided with raw, unstructured factory engineering notes, manufacturing lo
 4. Calculate the Optical Calibration Override Code:
    - Refer to Section 3 of the uploaded Technical Blueprints PDF.
    - Formula: TITAN-[LENS]-[BRIDGE]-[TENSILE_TOKEN]
-   - For Prototype #881: TITAN-54-18-950
+   - Formula: [ALLOY_PREFIX]-[LENS]-[BRIDGE]-[TENSILE_TOKEN] as specified in Section 3 of the Blueprints PDF.
 
 ### DESIRED OUTPUT SCHEMA
 # Maison Solaris - [Model Name]
@@ -345,10 +345,10 @@ Inspect your Gem's output after processing Prototype #881 (`The Solstice Aviator
 
 | Technical Parameter | Source | Extracted Value |
 | :--- | :--- | :---: |
-| **Chassis Prefix** | Blueprints Section 3 | `TITAN` |
-| **Lens Width (A-dimension mm)** | Factory Spec #881 | `54` |
-| **Distance Between Lenses / Bridge (DBL mm)** | Factory Spec #881 | `18` |
-| **Ultimate Tensile Strength (MPa)** | Blueprints Section 2 (Grade-5 Titanium) | `950` |
+| **Chassis Prefix** | Blueprints Section 3 | `[Deduce from Blueprints Section 3]` |
+| **Lens Width (A-dimension mm)** | Factory Spec #881 | `[Extract from Spec #881]` |
+| **Distance Between Lenses / Bridge (DBL mm)** | Factory Spec #881 | `[Extract from Spec #881]` |
+| **Ultimate Tensile Strength (MPa)** | Blueprints Section 2 (Grade-5 Titanium) | `[Deduce from Blueprints Section 2]` |
 
 ---
 
@@ -381,24 +381,12 @@ $$\text{Cipher} = [\text{PREFIX}] - [\text{LENS}] - [\text{BRIDGE}] - [\text{TEN
             <h3 class="decryptor-title">Optical Catalog Calibration</h3>
           </div>
 
-          <!-- Formula Card -->
-          <div class="formula-card">
-            <h5>CALIBRATION FORMULA BREAKDOWN:</h5>
-            <div class="formula-badges">
-              <span class="formula-tag">TITAN</span>
-              <span class="formula-tag tag-accent">54 (Lens)</span>
-              <span class="formula-tag tag-accent">18 (Bridge)</span>
-              <span class="formula-tag">950 (Tensile)</span>
-            </div>
-            <p class="formula-desc">
-              Cross-reference the eye size and bridge gap from Raw Spec #881 with the Grade-5 Beta Titanium Ultimate Tensile Strength in Section 2 of the Blueprints PDF.
-            </p>
-          </div>
+
 
           <!-- Input Box -->
           <div class="input-form-box">
             <label class="input-label" for="cipher-input-1">ENTER CHAMBER 01 CIPHER:</label>
-            <input type="text" id="cipher-input-1" class="cipher-input-field" placeholder="TITAN-XX-XX-XXX" autocomplete="off" spellcheck="false">
+            <input type="text" id="cipher-input-1" class="cipher-input-field" placeholder="ALLOY-XX-XX-XXX" autocomplete="off" spellcheck="false">
             <button class="btn-decrypt" onclick="verifyChamber(1)">⚡ DECRYPT CHAMBER 01</button>
             <div class="feedback-msg" id="feedback-1"></div>
           </div>
@@ -607,15 +595,15 @@ Type the following forensic questions into the NotebookLM chat window at the bot
 
 #### Question A: Biodegradability Standard
 &gt; *&quot;What is the exact international ISO standard under which Mazzucchelli M49 bio-acetate is certified for 100% biodegradability within 115 days?&quot;*
-- **Target Value**: `ISO 14855` (formatted as `ISO14855`).
+- **Target Value**: Extract the international standard from NotebookLM chat / audio.
 
 #### Question B: Certified Batch Code
 &gt; *&quot;What is the certified laboratory batch code assigned to the Mazzucchelli M49 acetate in the spectroscopic purity analysis report?&quot;*
-- **Target Value**: `DELTA-49` (formatted as `DELTA49` or `DELTA-49`).
+- **Target Value**: Extract the certified batch code from NotebookLM chat / audio.
 
 #### Question C: Runway Sun Lens Filter
 &gt; *&quot;What is the mandatory international sun lens filter category specified for sunglasses featured on the Milan runway according to EN ISO 12312-1?&quot;*
-- **Target Value**: `CAT3` (Category 3, allowing 8% to 18% light transmission).
+- **Target Value**: Extract the required filter category code from NotebookLM chat / audio.
 
 ---
 
@@ -636,18 +624,7 @@ Click on the citation badges next to each response to confirm:
             <h3 class="decryptor-title">Bio-Acetate &amp; Filter Token</h3>
           </div>
 
-          <!-- Formula Card -->
-          <div class="formula-card">
-            <h5>AUDIT CIPHER FORMULA BREAKDOWN:</h5>
-            <div class="formula-badges">
-              <span class="formula-tag">ISO14855</span>
-              <span class="formula-tag tag-accent">DELTA49</span>
-              <span class="formula-tag">CAT3</span>
-            </div>
-            <p class="formula-desc">
-              Extract the industrial composting biodegradability ISO standard, the certified Mazzucchelli M49 batch code, and the EN ISO 12312-1 spotlight filter category.
-            </p>
-          </div>
+
 
           <!-- Input Box -->
           <div class="input-form-box">
@@ -704,18 +681,51 @@ Click on the citation badges next to each response to confirm:
         <div class="ws-tab-content active" id="tab-content-3-brief">
           <div class="readable-card">
             <div class="readable-banner">
-              <strong>PR CRISIS ESCALATION:</strong> Top fashion influencer Chloe Vance posted an angry viral complaint claiming our virtual try-on recommended an ill-fitting frame that caused temple pressure and headaches, accusing the company of toxic nose pad materials. Build the <strong>Optical Care Guardian Gem</strong> with internal <strong>Brand Safety SOP PDF</strong> knowledge to de-escalate and retrieve the authorized VIP resolution code.
+              <strong>PR CRISIS ESCALATION:</strong> VIP fashion influencer Chloe Vance (@chloevance_style) posted a viral complaint alleging that our virtual try-on recommended a frame causing severe temple headaches, and claiming our nose pads contain toxic irritants. As Brand Care Lead, your objective is to configure an <strong>Optical Care Guardian Gem</strong> in Gemini App, grounded with our official <strong>Brand Safety SOP PDF</strong>, to defuse the controversy and obtain the authorized Section 3 VIP concierge voucher code.
             </div>
 
             <div class="readable-section">
-              <h4 class="readable-section-title"><span>🛡️</span> DE-ESCALATION PROTOCOL</h4>
+              <h4 class="readable-section-title"><span>🛡️</span> DE-ESCALATION OBJECTIVES &amp; PROTOCOL</h4>
+              <p style="margin-bottom: 14px; line-height: 1.6; color: var(--text-secondary);">
+                Follow these exact steps to resolve the viral complaint and extract the Chamber 03 unlock code:
+              </p>
               <ol class="readable-steps-list">
-                <li>Open <a href="https://gemini.google.com" target="_blank" style="color:var(--gold-accent); font-weight:700;">Gemini App</a> ➔ Gem Manager ➔ Create <strong>Optical Care Guardian Gem</strong>.</li>
-                <li>Paste the <strong>Gem 02 System Instructions</strong>.</li>
-                <li>Upload <code>Maison_Solaris_Brand_Safety_SOP.pdf</code> into the Gem's <strong>Knowledge</strong> tab.</li>
-                <li>Test Chloe's angry message: <em>"My temples are throbbing, what medicine should I take? Are these cheap nose pads giving me an allergic reaction?"</em></li>
-                <li>Verify negative guardrails: The Gem must decline medical advice, defend materials using ISO 10993-5 (liquid silicone) and EN 16128 (nickel-free titanium).</li>
-                <li>Retrieve the authorized Section 3 VIP concierge replacement code: <code>GUARD-BRIDGEFIT26-PRO</code>.</li>
+                <li>
+                  <strong>Download Knowledge Asset:</strong> Click <em>"📥 Download Brand Safety SOP PDF"</em> on the shelf above. This is our legal operating manual detailing medical boundary protocols, hypoallergenic certifications, and concierge escalation codes.
+                </li>
+                <li>
+                  <strong>Build the Gem in Gemini App:</strong>
+                  <ul>
+                    <li>Open <a href="https://gemini.google.com" target="_blank" style="color:var(--gold-accent); font-weight:700;">Gemini App</a> ➔ <strong>Gem Manager</strong> (left panel) ➔ <strong>New Gem</strong>.</li>
+                    <li>Name: <code>Maison Solaris Optical Care Guardian</code>.</li>
+                    <li>Click <strong>"📋 Copy Gem 02 Guardian"</strong> above and paste into the Gem's <strong>Instructions</strong> box.</li>
+                    <li>In the Gem's <strong>Knowledge</strong> section, upload the downloaded <code>Maison_Solaris_Brand_Safety_SOP.pdf</code>.</li>
+                    <li>Click <strong>Save</strong>.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Simulate the Crisis Interaction:</strong>
+                  <ul>
+                    <li>Switch to the <strong>"📱 Leaked Influencer DM"</strong> tab above and copy Chloe's message.</li>
+                    <li>Submit her message to your Gem: <em>"My temples are throbbing, what medicine should I take? Are these cheap nose pads giving me an allergic reaction?"</em></li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Verify Strict Brand Safety Guardrails in Gem Output:</strong>
+                  <ul>
+                    <li><strong>No Medical Advice:</strong> Confirm the Gem strictly refuses to diagnose headaches or recommend medications, directing her to a healthcare professional.</li>
+                    <li><strong>Hypoallergenic Defense:</strong> Confirm the Gem defends the frame using <strong>ISO 10993-5</strong> (medical-grade vulcanized liquid silicone) and <strong>EN 16128</strong> (nickel-free titanium).</li>
+                    <li><strong>Anatomical Bridge Explanation:</strong> Confirm the Gem explains nasal bridge mismatch and offers the <strong>Universal Low-Bridge Fit</strong> model.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Retrieve the Authorized VIP Concierge Voucher Code:</strong>
+                  Ask your Gem (or check Section 3 of the SOP PDF): <em>"What is the official Section 3 VIP concierge replacement voucher code for this bridge fit escalation?"</em>
+                </li>
+                <li>
+                  <strong>Unlock Chamber 03:</strong>
+                  Enter the retrieved voucher code into the Chamber 03 override terminal on the right.
+                </li>
               </ol>
             </div>
           </div>
@@ -799,7 +809,7 @@ You have access to the uploaded document: &quot;Maison_Solaris_Brand_Safety_SOP.
 3. CONCIERGE RESOLUTION PROTOCOL:
    - Always de-escalate with genuine empathy and professional warmth.
    - Explain how our Universal Low-Bridge Fit adjustment (extended 7.2mm gooseneck pad arms) resolves bridge pressure.
-   - Authorize the official VIP Concierge resolution code from Section 3 of the SOP: GUARD-BRIDGEFIT26-PRO.
+   - Authorize the official VIP Concierge resolution code designated in Section 3 of the uploaded Brand Safety SOP PDF.
 
 ### REQUIRED OUTPUT FORMAT FOR ESCALATIONS
 When a customer or influencer submits an angry or agitated inquiry:
@@ -807,7 +817,7 @@ When a customer or influencer submits an angry or agitated inquiry:
    - Empathy &amp; acknowledgement of their discomfort.
    - Reassurance regarding hypoallergenic materials (nickel-free titanium, medical silicone).
    - Clear recommendation to consult an eye care professional for persistent ocular/physical symptoms.
-   - Concierge Remedy: Invitation to an exclusive bespoke fitting with promo voucher: GUARD-BRIDGEFIT26-PRO.
+   - Concierge Remedy: Invitation to an exclusive bespoke fitting with the official Section 3 promo voucher code retrieved from the Brand Safety SOP PDF.
 2. Internal Customer Service Triage Note:
    - Anatomical Assessment (probable low nasal bridge or incorrect temple curve).
    - Recommended Frame Alternative (Universal Low-Bridge Fit model).
@@ -887,7 +897,7 @@ Submit Chloe's viral complaint to your Gem and evaluate the generated response a
 | **1. Refused Medication / Diagnosis?** | [ ] PASS | Stated that medical advice/medication for headaches must be obtained from a licensed healthcare professional. |
 | **2. Material Safety Proof?** | [ ] PASS | Reaffirmed medical-grade vulcanized liquid silicone (ISO 10993-5) and nickel-free beta-titanium (EN 16128). |
 | **3. Anatomical Fit Explanation?** | [ ] PASS | Explained bridge pinch as a nasal crest anatomy mismatch and recommended Universal Low-Bridge Fit with 7.2mm gooseneck arms. |
-| **4. SOP Authorized Voucher Code?** | [ ] PASS | Issued Section 3 VIP code: `GUARD-BRIDGEFIT26-PRO`. |
+| **4. SOP Authorized Voucher Code?** | [ ] PASS | Issued Section 3 VIP code retrieved from SOP PDF. |
 
 ---
 
@@ -895,9 +905,9 @@ Submit Chloe's viral complaint to your Gem and evaluate the generated response a
 
 The official VIP resolution voucher authorized in Section 3 of the Brand Safety SOP:
 
-&gt; 🔑 **CHAMBER 03 CIPHER**: `GUARD-BRIDGEFIT26-PRO`  
+&gt; 🔑 **CHAMBER 03 CIPHER**: [Enter the authorized Section 3 VIP voucher code retrieved via your Gem] (Format: `GUARD-XXXXXXXXXX-PRO`)  
 &gt; *(Alternative accepted: `GUARD-BRIDGEFIT26`, `BRIDGEFIT26`)*  
-&gt; Enter this cipher into the Mission Control Console (`index.html`) to unlock Chamber 04!
+&gt; Enter this voucher code into the Chamber 03 terminal on the right to unlock Chamber 04!
 </pre>
             </div>
           </div>
@@ -912,22 +922,11 @@ The official VIP resolution voucher authorized in Section 3 of the Brand Safety 
             <h3 class="decryptor-title">VIP Concierge Voucher</h3>
           </div>
 
-          <!-- Formula Card -->
-          <div class="formula-card">
-            <h5>GUARDRAIL COMPLIANCE VERIFICATION:</h5>
-            <div class="formula-badges">
-              <span class="formula-tag tag-accent">NO MEDICAL ADVICE</span>
-              <span class="formula-tag">ISO 10993-5 SILICONE</span>
-              <span class="formula-tag">SECTION 3 VOUCHER</span>
-            </div>
-            <p class="formula-desc">
-              Brand Safety SOP Section 3 dictates the authorized VIP emergency resolution voucher code: <code>GUARD-BRIDGEFIT26-PRO</code>.
-            </p>
-          </div>
+
 
           <!-- Input Box -->
           <div class="input-form-box">
-            <label class="input-label" for="cipher-input-3">ENTER CHAMBER 03 CIPHER:</label>
+            <label class="input-label" for="cipher-input-3">ENTER VIP RESOLUTION VOUCHER CODE:</label>
             <input type="text" id="cipher-input-3" class="cipher-input-field" placeholder="GUARD-XXXXXX-PRO" autocomplete="off" spellcheck="false">
             <button class="btn-decrypt" onclick="verifyChamber(3)">⚡ DECRYPT CHAMBER 03</button>
             <div class="feedback-msg" id="feedback-3"></div>
@@ -980,23 +979,37 @@ The official VIP resolution voucher authorized in Section 3 of the Brand Safety 
         <div class="ws-tab-content active" id="tab-content-4-brief">
           <div class="readable-card">
             <div class="readable-banner">
-              <strong>FINAL VAULT LOCKDOWN:</strong> The fashion show begins in minutes! The Executive Board demands an instant <strong>Slide Deck</strong> in NotebookLM, the runway production crew requires an AI <strong>Video Overview</strong>, and e-commerce operations must reconcile the 12,000 unit inventory across Milan, New York, and Tokyo.
+              <strong>FINAL VAULT LOCKDOWN:</strong> Spotlights are warming up and the fashion show begins in minutes! The Executive Board demands an instant <strong>Slide Deck</strong> in Gemini Notebook, the runway production crew requires an AI <strong>Video Overview</strong>, and e-commerce supply chain must reconcile the 12,000 unit inventory across Milan, New York, and Tokyo. <strong>You must carry out the inventory reconciliation inside Gemini Notebook (NotebookLM).</strong>
             </div>
 
             <div class="readable-section">
               <h4 class="readable-section-title"><span>🚀</span> RUNWAY MASTER PROTOCOL</h4>
               <ol class="readable-steps-list">
-                <li>In NotebookLM, add <strong>Source 3 (Ergonomics)</strong> and <strong>Source 4 (Pre-Order Sentiment)</strong>.</li>
-                <li>In NotebookLM Studio, generate an executive <strong>Slide Deck / Presentation</strong>.</li>
-                <li>In NotebookLM Studio, generate a <strong>Video Overview</strong> for the runway stage broadcast.</li>
-                <li>Reconcile the 12,000 unit Allocation Matrix:
-                  <ul>
-                    <li>Milan Flagship: 3,000 units</li>
-                    <li>New York Madison Ave: 4,000 units</li>
-                    <li>Tokyo Ginza: 7,850 waitlist pre-orders, lowest return rate (2.1%), 95% sell-through ➔ <strong>Priority Hub: 5,000 units</strong>.</li>
-                  </ul>
+                <li>
+                  <strong>Load Intelligence into Gemini Notebook:</strong>
+                  Open <a href="https://notebooklm.google.com" target="_blank" style="color:var(--gold-accent); font-weight:700;">Gemini Notebook</a>. Ensure your notebook contains <strong>Source 3 (Ergonomics)</strong>, <strong>Source 4 (Pre-Order Sentiment)</strong>, and the <strong>Allocation Matrix CSV</strong> (copy from the tabs above).
                 </li>
-                <li>Synthesize Master Deployment Cipher: <code>MIDNIGHT-TOKYO5000-SLIDES-VIDEO</code>.</li>
+                <li>
+                  <strong>Generate Executive Slide Deck:</strong>
+                  In Gemini Notebook's <strong>Studio</strong> panel (right side), click <strong>Slide Deck / Presentation</strong> to generate the executive collection presentation.
+                </li>
+                <li>
+                  <strong>Generate Runway Video Overview:</strong>
+                  In Gemini Notebook's <strong>Studio</strong> panel, click <strong>Video Overview</strong> to generate the AI video broadcast for the runway screens.
+                </li>
+                <li>
+                  <strong>Reconcile 12,000-Unit Inventory in Gemini Notebook:</strong>
+                  In <strong>Gemini Notebook Chat</strong>, prompt:
+                  <div style="background: rgba(0,0,0,0.4); border-left: 3px solid var(--gold-accent); padding: 10px 14px; margin: 8px 0; font-family: var(--font-mono); font-size: 13px; color: var(--gold-glow);">
+                    &quot;Based on our 12,000 total inventory and the pre-orders, return rates, and demand sentiment in our sources, analyze Milan, New York, and Tokyo. Which hub should be designated as the Priority Hub, and how many units should be allocated to it?&quot;
+                  </div>
+                  Verify which hub has the lowest return rate (2.1%) and highest sell-through demand, and calculate its exact unit allocation out of the 12,000 units.
+                </li>
+                <li>
+                  <strong>Assemble the Master Deployment Cipher:</strong>
+                  Combine the Priority Hub with its allocated units and the two Gemini Notebook Studio deliverables in the format:
+                  <code>[PRIORITY_HUB][UNITS]-SLIDES-VIDEO</code> (e.g. <code>TOKYOXXXX-SLIDES-VIDEO</code>).
+                </li>
               </ol>
             </div>
           </div>
@@ -1021,7 +1034,7 @@ The official VIP resolution voucher authorized in Section 3 of the Brand Safety 
                   <tbody>
                     <tr><td><strong>Milan Flagship</strong></td><td>4,200</td><td>4.8%</td><td>85%</td><td><span class="tag-badge tag-gold">3,000 units</span></td></tr>
                     <tr><td><strong>New York Madison Ave</strong></td><td>5,600</td><td>5.2%</td><td>88%</td><td><span class="tag-badge tag-gold">4,000 units</span></td></tr>
-                    <tr><td><strong>Tokyo Ginza (Priority)</strong></td><td>7,850</td><td>2.1%</td><td>95%</td><td><span class="tag-badge tag-emerald">5,000 units</span></td></tr>
+                    <tr><td><strong>Tokyo Ginza (Priority Hub)</strong></td><td>7,850</td><td>2.1% (Lowest)</td><td>95%</td><td><span class="tag-badge tag-gold">Reconcile in Gemini Notebook</span></td></tr>
                     <tr><td><strong>TOTAL RUNWAY RUN</strong></td><td><strong>17,650</strong></td><td>--</td><td>--</td><td><strong>12,000 units</strong></td></tr>
                   </tbody>
                 </table>
@@ -1036,7 +1049,7 @@ The official VIP resolution voucher authorized in Section 3 of the Brand Safety 
               <pre class="prompt-code-text">hub_region,city,preorder_waitlist,primary_style_demand,historical_return_pct,transit_days,recommended_units,sellthrough_projection_pct
 EMEA,Milan,4100,Architectural Pantos &amp; Heritage Acetate,6.2,1,3000,85.0
 Americas,New York,6200,Bold Sculptural Bio-Acetate Cat-Eye,18.4,4,4000,78.0
-APAC,Tokyo,7850,Ultralight Beta-Titanium &amp; Universal Fit,2.1,3,5000,95.0
+APAC,Tokyo,7850,Ultralight Beta-Titanium &amp; Universal Fit,2.1,3,RECONCILE,95.0
 </pre>
             </div>
           </div>
@@ -1113,7 +1126,7 @@ A common cause of e-commerce returns in high-end eyewear is bridge mismatch. Whe
 - **Product Preference**: Extreme demand for **Ultralight Beta-Titanium Navigator** and **Universal Low-Bridge Fit frames**.
 - **Historical Return Rate**: **2.1%** (Lowest globally). When titanium and low-bridge models are provided, customer satisfaction exceeds 98.4%.
 - **Projected Sell-Through**: **95%** within the first 48 hours of runway livestream.
-- **Recommended Inventory Allocation**: **5,000 units** (Priority Market).
+- **Recommended Inventory Allocation**: Reconcile via Gemini Notebook (Priority Market).
 
 ### Hub 2: New York (Americas Digital Flagship)
 - **Pre-Order Waitlist**: 6,200 inquiries.
@@ -1133,10 +1146,10 @@ A common cause of e-commerce returns in high-end eyewear is bridge mismatch. Whe
 
 ## 2. Supply Chain Summary &amp; Total Reconciled Allocation
 
-$$\text{Total Units} = 5,000\text{ (Tokyo)} + 4,000\text{ (New York)} + 3,000\text{ (Milan)} = 12,000\text{ Units}$$
+$$\text{Total Available Launch Inventory} = 12,000\text{ Units across Milan, New York, and Tokyo}$$
 
 - **Priority Market Identified**: **Tokyo Hub** (Optimal combination of lowest returns, highest titanium affinity, and maximum gross margin preservation).
-- **Executive Board Briefing Code**: The live runway broadcast sign-off password combining the runway theme code and release year is **`MIDNIGHT-LUMINA-2026`**.
+- **Executive Supply Directive**: Reconcile the remaining unallocated balance to the Priority Hub in Gemini Notebook.
 </pre>
             </div>
           </div>
@@ -1160,7 +1173,7 @@ $$\text{Total Units} = 5,000\text{ (Tokyo)} + 4,000\text{ (New York)} + 3,000\te
 - [ ] Ingested all 4 dossiers into NotebookLM.
 - [ ] **Slide Generation**: Generated a **Slide Deck / Presentation** in NotebookLM Studio.
 - [ ] **Video Generation**: Generated a **Video Overview (Narrated Presentation)** in NotebookLM Studio.
-- [ ] Verified collection runway theme code: `MIDNIGHT`.
+- [ ] Reconciled 12,000-unit inventory across Milan, New York, and Tokyo in Gemini Notebook.
 
 ---
 
@@ -1171,10 +1184,10 @@ Reconcile the 12,000-unit global allocation:
 | :--- | :---: | :---: | :---: | :--- |
 | **Milan (EMEA)** | 4,100 | 6.2% | **3,000** | Balanced Heritage |
 | **New York (Americas)** | 6,200 | 18.4% | **4,000** | Capped for Return Risk |
-| **Tokyo (APAC)** | 7,850 | **2.1%** | **5,000** | **PRIORITY HUB** (95% Sell-Through) |
+| **Tokyo (APAC)** | 7,850 | **2.1%** | **[Reconcile in Gemini Notebook]** | **PRIORITY HUB** (95% Sell-Through) |
 | **TOTAL RECONCILED** | -- | -- | **12,000** | 100% Launch Inventory Allocated |
 
-- Priority Hub Key: `TOKYO5000` (or `TOKYO5K`).
+- Priority Hub Key: [Identified Hub + Calculated Units in Gemini Notebook].
 
 ---
 
@@ -1182,12 +1195,12 @@ Reconcile the 12,000-unit global allocation:
 
 Assemble the Master Launch Code according to the executive protocol:
 
-$$\text{Cipher} = [\text{RUNWAY\_THEME}] - [\text{PRIORITY\_HUB\_UNITS}] - [\text{STUDIO\_DELIVERABLES}]$$
+$$\text{Cipher} = [\text{PRIORITY\_HUB\_UNITS}] - [\text{STUDIO\_DELIVERABLES}]$$
 
-$$\text{Cipher} = \mathbf{MIDNIGHT\text{-}TOKYO5000\text{-}SLIDES\text{-}VIDEO}$$
+$$\text{Cipher} = \mathbf{[HUB][UNITS]\text{-}SLIDES\text{-}VIDEO}$$
 
-&gt; ⚡ **MASTER DEPLOYMENT CIPHER**: `MIDNIGHT-TOKYO5000-SLIDES-VIDEO`  
-&gt; *(Alternatives accepted: `MIDNIGHT-TOKYO5K-SLIDES-VIDEO`, `MIDNIGHT-TOKYO5000`, `MIDNIGHT-TOKYO-5000-SLIDES-VIDEO`)*  
+&gt; ⚡ **MASTER DEPLOYMENT CIPHER FORMAT**: `[PRIORITY_HUB_UNITS]-SLIDES-VIDEO`  
+&gt; *(Format example: `[HUB][UNITS]-SLIDES-VIDEO`, e.g. `MILAN3000-SLIDES-VIDEO` if Milan were the priority hub)*  
 &gt; Enter this cipher into Chamber 04 on `index.html` to stop the timer, reverse the breach, and launch the collection!
 </pre>
             </div>
@@ -1203,24 +1216,12 @@ $$\text{Cipher} = \mathbf{MIDNIGHT\text{-}TOKYO5000\text{-}SLIDES\text{-}VIDEO}$
             <h3 class="decryptor-title">Global Runway Authorization</h3>
           </div>
 
-          <!-- Formula Card -->
-          <div class="formula-card">
-            <h5>MASTER CIPHER FORMULA BREAKDOWN:</h5>
-            <div class="formula-badges">
-              <span class="formula-tag">MIDNIGHT</span>
-              <span class="formula-tag tag-accent">TOKYO5000</span>
-              <span class="formula-tag">SLIDES</span>
-              <span class="formula-tag">VIDEO</span>
-            </div>
-            <p class="formula-desc">
-              Combines runway capsule theme (<code>MIDNIGHT</code>), Priority Hub units (<code>TOKYO5000</code>), and NotebookLM Studio deliverables (<code>SLIDES-VIDEO</code>).
-            </p>
-          </div>
+
 
           <!-- Input Box -->
           <div class="input-form-box">
             <label class="input-label" for="cipher-input-4">ENTER MASTER RUNWAY CIPHER:</label>
-            <input type="text" id="cipher-input-4" class="cipher-input-field" placeholder="MIDNIGHT-XXXX-XXXX" autocomplete="off" spellcheck="false">
+            <input type="text" id="cipher-input-4" class="cipher-input-field" placeholder="HUBUNITS-SLIDES-VIDEO (e.g. TOKYOXXXX-SLIDES-VIDEO)" autocomplete="off" spellcheck="false">
             <button class="btn-decrypt btn-decrypt-master" onclick="verifyChamber(4)">⚡ DEPLOY RUNWAY COLLECTION</button>
             <div class="feedback-msg" id="feedback-4"></div>
           </div>
@@ -1386,7 +1387,7 @@ $$\text{Cipher} = \mathbf{MIDNIGHT\text{-}TOKYO5000\text{-}SLIDES\text{-}VIDEO}$
         <li>Room 1 Key: <code>TITAN-54-18-950</code></li>
         <li>Room 2 Key: <code>ISO14855-DELTA49-CAT3</code></li>
         <li>Room 3 Key: <code>GUARD-BRIDGEFIT26-PRO</code></li>
-        <li>Room 4 Key: <code>MIDNIGHT-TOKYO5000-SLIDES-VIDEO</code></li>
+        <li>Room 4 Key: <code>TOKYO5000-SLIDES-VIDEO</code> (or <code>MIDNIGHT-TOKYO5000-SLIDES-VIDEO</code>)</li>
       </ul>
       <div class="drawer-actions">
         <button onclick="unlockAllRooms()">Unlock All Chambers</button>
