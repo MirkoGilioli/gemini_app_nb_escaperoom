@@ -1,0 +1,28 @@
+=== MAISON SOLARIS ATELIER DI FABBRICA - BELLUNO ===
+RAW FACTORY LOG: BATCH RUNWAY A/W CAPSULE 
+DATE: 2026-09-15 / STATUS: UNFILTERED
+
+--- ITEM 1: HERO RUNWAY MODEL ---
+Internal Ref: Proto-881_SOLSTICE_AVIATOR
+Notes from Artisan Gianluca:
+"We finished the prototype for the Milan night runway. Pilot aviator double bridge teardrop wire.
+Eye lens width is 54 mm, bridge distance between rims is 18 mm, temples are 145 mm ribbed titanium with Italian bio-acetate tips from Mazzucchelli M49. 
+The main frame chassis is cold-rolled aerospace Grade-5 Beta Titanium cut in Belluno factory. 
+Lenses installed: high-contrast polarized CR-39 sun lenses in dark charcoal gradient with multilayer back anti-reflective coat. 
+UV optical rating is certified UV400, strictly Category 3 (CAT3) under European EN ISO 12312-1 standard (12% visible light transmission).
+Fits square and heart face contours best."
+
+--- ITEM 2: SECONDARY MODEL ---
+Internal Ref: Proto-882_MILANO_CAT_EYE
+Notes from Artisan Gianluca:
+"Geometric sharp cat-eye cut entirely from 8mm thick slab Mazzucchelli M49 bio-acetate in Havana tortoiseshell.
+Dimensions: lens 51 mm, bridge 20 mm, temple length 140 mm. Standard European fit.
+Lenses: solid warm olive CR-39, Category 3 filter, UV400.
+Recommended for oval and round jawlines."
+
+--- ITEM 3: TERTIARY MODEL ---
+Internal Ref: Proto-883_PANTOS_MINIMAL
+Notes from Artisan Gianluca:
+"Classic 1950s architectural Pantos round frame with keyhole bridge.
+Dimensions: 48-21-145. Made from combination titanium eyewire and honey bio-acetate brow inserts.
+Lenses: polarized sepia tint, Category 2 filter for afternoon ambient light."

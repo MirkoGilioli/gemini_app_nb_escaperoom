@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maison Solaris Eyewear | Mission Control Lockdown</title>
+  <link rel="stylesheet" href="assets/css/terminal.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=JetBrains+Mono:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-terminal">
+  <!-- Top Navigation & Status Bar -->
+  <header class="top-bar">
+    <div class="brand-container">
+      <div class="brand-icon">🕶️</div>
+      <div class="brand-titles">
+        <span class="brand-name">MAISON SOLARIS</span>
+        <span class="brand-sub">LUXURY EYEWEAR • MILAN</span>
+      </div>
+    </div>
+    
+    <div class="status-center">
+      <div class="security-level">
+        <span class="pulse-indicator"></span>
+        <span class="status-text">SYSTEM STATUS: <strong class="alert-text">LOCKDOWN ACTIVE</strong></span>
+      </div>
+      <div class="event-title">A/W CAPSULE RUNWAY DEPLOYMENT VAULT</div>
+    </div>
+
+    <div class="session-controls">
+      <button id="btn-sound-toggle" class="icon-btn" title="Toggle Audio Synthesizer">🔊 SOUND ON</button>
+      <button id="btn-reset-session" class="icon-btn reset-btn" title="Reset Escape Room Session">↺ RESET</button>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <main class="terminal-main">
+    
+    <!-- Left Column: Mission Brief & Live Countdown -->
+    <section class="left-panel">
+      <!-- Countdown Timer Deck -->
+      <div class="timer-deck card-glass">
+        <div class="timer-label">T-MINUS UNTIL RUNWAY LAUNCH</div>
+        <div class="timer-display" id="timer-display">60:00</div>
+        <div class="timer-controls">
+          <button id="btn-timer-toggle" class="btn-primary">▶ START MISSION</button>
+          <button id="btn-add-time" class="btn-ghost">+5 MIN</button>
+        </div>
+        <div class="penalty-log" id="penalty-log">Penalties: 0 min (0 hints used)</div>
+      </div>
+
+      <!-- Live Squad Progress -->
+      <div class="progress-deck card-glass">
+        <h3>SQUAD PROTOCOL PROGRESS</h3>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <div class="progress-stats">
+          <span id="vaults-unlocked-text">0 / 4 Chambers Unlocked</span>
+          <span id="progress-percent-text">0%</span>
+        </div>
+      </div>
+
+      <!-- Quick Room Navigation Tabs -->
+      <div class="rooms-nav-deck card-glass">
+        <h3>SECURITY CHAMBERS</h3>
+        <div class="room-nav-list">
+          <button class="nav-room-btn active" data-room="1" id="nav-btn-1">
+            <span class="room-num">01</span>
+            <span class="room-info">
+              <strong>Optical Catalog Specs</strong>
+              <small>Gemini Gems: Structured Taxonomy</small>
+            </span>
+            <span class="lock-status" id="nav-status-1">🔒</span>
+          </button>
+
+          <button class="nav-room-btn" data-room="2" id="nav-btn-2">
+            <span class="room-num">02</span>
+            <span class="room-info">
+              <strong>Bio-Acetate Dossier</strong>
+              <small>NotebookLM: Grounded Citations</small>
+            </span>
+            <span class="lock-status" id="nav-status-2">🔒</span>
+          </button>
+
+          <button class="nav-room-btn" data-room="3" id="nav-btn-3">
+            <span class="room-num">03</span>
+            <span class="room-info">
+              <strong>PR Fit & Sizing Crisis</strong>
+              <small>Gemini Gems: Brand Guardrails</small>
+            </span>
+            <span class="lock-status" id="nav-status-3">🔒</span>
+          </button>
+
+          <button class="nav-room-btn" data-room="4" id="nav-btn-4">
+            <span class="room-num">04</span>
+            <span class="room-info">
+              <strong>Midnight Runway Vault</strong>
+              <small>NotebookLM: Audio Overview & Allocation</small>
+            </span>
+            <span class="lock-status" id="nav-status-4">🔒</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Interactive Chamber Workstation -->
+    <section class="chamber-workstation card-glass">
+      
+      <!-- Room 1 Workstation -->
+      <div class="room-panel active" id="room-panel-1">
+        <div class="chamber-header">
+          <div class="chamber-badge">CHAMBER 01 • GEMINI APP GEMS</div>
+          <h2>The Scrambled Optical Catalog & Frame Specs</h2>
+          <p class="chamber-desc">
+            The supplier factory delivered unstructured manufacturing logs for the flagship frame: 
+            <em>The Solstice Titanium Aviator</em>. The e-commerce CMS requires an SEO luxury description, 
+            standardized optical fit dimensions (<code>54-18-145</code>), and verified taxonomy tags.
+          </p>
+        </div>
+
+        <div class="mission-instructions">
+          <h4>YOUR OBJECTIVE:</h4>
+          <ol>
+            <li>Open the Gemini App and create the <strong>Luxury Eyewear Merchandiser Gem</strong> using the system prompt in <code>gem-library/01_eyewear_catalog_gem.md</code>.</li>
+            <li>Feed the unstructured raw factory spec from <code>rooms/room-1-frame-chaos/raw_factory_specs.txt</code> into your Gem.</li>
+            <li>Follow the instructions in <code>rooms/room-1-frame-chaos/student_worksheet.md</code> to extract the 5-letter Security Override Key.</li>
+          </ol>
+        </div>
+
+        <!-- Verification Form -->
+        <div class="code-verification-box">
+          <label for="cipher-input-1">ENTER CHAMBER 01 OVERRIDE CIPHER:</label>
+          <div class="input-group">
+            <input type="text" id="cipher-input-1" placeholder="e.g. KEYWORD" autocomplete="off" spellcheck="false">
+            <button class="btn-unlock" onclick="verifyChamber(1)">VERIFY CIPHER</button>
+          </div>
+          <div class="feedback-msg" id="feedback-1"></div>
+        </div>
+
+        <!-- Hint System -->
+        <div class="hint-container">
+          <div class="hint-header">
+            <span>NEED ASSISTANCE? (Costs -3:00 per hint)</span>
+            <button class="btn-hint" onclick="requestHint(1)">GET TIERED HINT</button>
+          </div>
+          <div class="hint-display" id="hint-display-1"></div>
+        </div>
+      </div>
+
+      <!-- Room 2 Workstation -->
+      <div class="room-panel" id="room-panel-2">
+        <div class="chamber-header">
+          <div class="chamber-badge">CHAMBER 02 • GEMINI NOTEBOOK (NOTEBOOKLM)</div>
+          <h2>The Bio-Acetate & Runway Compliance Archive</h2>
+          <p class="chamber-desc">
+            The European Optical Safety Board and Milan Fashion Week sustainability auditors 
+            are demanding verified certification proofs for our Mazzucchelli M49 bio-acetate and 
+            UV400 Category 3 sun lenses. One hallucination will shut down the runway!
+          </p>
+        </div>
+
+        <div class="mission-instructions">
+          <h4>YOUR OBJECTIVE:</h4>
+          <ol>
+            <li>Create a new notebook in <strong>Gemini Notebook (NotebookLM)</strong>.</li>
+            <li>Upload the source files from <code>notebook-sources/01_mido_eyewear_trend_report.md</code> and <code>02_bio_acetate_material_audit.md</code>.</li>
+            <li>Ask the grounded forensic questions listed in <code>rooms/room-2-trend-dossier/notebook_tasks.md</code>.</li>
+            <li>Inspect the inline citation badges to extract the exact material code and lens classification to form the cipher.</li>
+          </ol>
+        </div>
+
+        <!-- Verification Form -->
+        <div class="code-verification-box">
+          <label for="cipher-input-2">ENTER CHAMBER 02 OVERRIDE CIPHER:</label>
+          <div class="input-group">
+            <input type="text" id="cipher-input-2" placeholder="e.g. CODE-SPEC" autocomplete="off" spellcheck="false">
+            <button class="btn-unlock" onclick="verifyChamber(2)">VERIFY CIPHER</button>
+          </div>
+          <div class="feedback-msg" id="feedback-2"></div>
+        </div>
+
+        <!-- Hint System -->
+        <div class="hint-container">
+          <div class="hint-header">
+            <span>NEED ASSISTANCE? (Costs -3:00 per hint)</span>
+            <button class="btn-hint" onclick="requestHint(2)">GET TIERED HINT</button>
+          </div>
+          <div class="hint-display" id="hint-display-2"></div>
+        </div>
+      </div>
+
+      <!-- Room 3 Workstation -->
+      <div class="room-panel" id="room-panel-3">
+        <div class="chamber-header">
+          <div class="chamber-badge">CHAMBER 03 • GEMINI APP GEMS</div>
+          <h2>The Virtual Try-On & Ergonomic Fit PR Firestorm</h2>
+          <p class="chamber-desc">
+            A viral social media video claims our automated sizing guide recommended an ill-fitting frame that 
+            caused severe bridge discomfort and headaches, falsely alleging toxic nose-pad materials. 
+            Customer care queues are overwhelmed with panicking pre-order buyers.
+          </p>
+        </div>
+
+        <div class="mission-instructions">
+          <h4>YOUR OBJECTIVE:</h4>
+          <ol>
+            <li>Build the <strong>Optical Care Guardian Gem</strong> using <code>gem-library/02_optical_care_guardian_gem.md</code>.</li>
+            <li>Program strict negative constraints: never provide medical/optometric diagnoses, and adhere strictly to hypoallergenic titanium & medical-grade silicone facts.</li>
+            <li>Test your Gem against the hostile influencer inquiry in <code>rooms/room-3-fit-crisis/MISSION.md</code>.</li>
+            <li>The properly calibrated Gem will trigger the special customer retention voucher code that acts as the cipher!</li>
+          </ol>
+        </div>
+
+        <!-- Verification Form -->
+        <div class="code-verification-box">
+          <label for="cipher-input-3">ENTER CHAMBER 03 OVERRIDE CIPHER:</label>
+          <div class="input-group">
+            <input type="text" id="cipher-input-3" placeholder="e.g. VOUCHERCODE" autocomplete="off" spellcheck="false">
+            <button class="btn-unlock" onclick="verifyChamber(3)">VERIFY CIPHER</button>
+          </div>
+          <div class="feedback-msg" id="feedback-3"></div>
+        </div>
+
+        <!-- Hint System -->
+        <div class="hint-container">
+          <div class="hint-header">
+            <span>NEED ASSISTANCE? (Costs -3:00 per hint)</span>
+            <button class="btn-hint" onclick="requestHint(3)">GET TIERED HINT</button>
+          </div>
+          <div class="hint-display" id="hint-display-3"></div>
+        </div>
+      </div>
+
+      <!-- Room 4 Workstation -->
+      <div class="room-panel" id="room-panel-4">
+        <div class="chamber-header">
+          <div class="chamber-badge">CHAMBER 04 • NOTEBOOKLM STUDIO & GEMS</div>
+          <h2>The Midnight Runway Master Vault</h2>
+          <p class="chamber-desc">
+            Final chamber! The Executive Committee in Milan requires a high-level verbal Audio Overview 
+            of the launch strategy, while e-commerce ops must allocate 12,000 limited-edition units 
+            across the Milan, New York, and Tokyo digital flagships before the runway spotlights turn on.
+          </p>
+        </div>
+
+        <div class="mission-instructions">
+          <h4>YOUR OBJECTIVE:</h4>
+          <ol>
+            <li>In your NotebookLM notebook, add <code>notebook-sources/04_regional_preorder_sentiment.md</code> as a source.</li>
+            <li>In the <strong>NotebookLM Studio</strong> panel, click <strong>"Audio Overview" (Deep Dive Conversation)</strong> or generate the executive Briefing Doc.</li>
+            <li>Use the <strong>Global Merchandise Allocator Gem</strong> (from <code>gem-library/03_merchandise_allocator_gem.md</code>) to calculate the optimal stock split.</li>
+            <li>Combine the dominant market allocation with the Audio Overview collection motto to generate the Master Cipher!</li>
+          </ol>
+        </div>
+
+        <!-- Verification Form -->
+        <div class="code-verification-box master-vault-box">
+          <label for="cipher-input-4">ENTER MASTER DEPLOYMENT CIPHER:</label>
+          <div class="input-group">
+            <input type="text" id="cipher-input-4" placeholder="e.g. LAUNCH-CODE-2026" autocomplete="off" spellcheck="false">
+            <button class="btn-unlock master-unlock-btn" onclick="verifyChamber(4)">⚡ DEPLOY COLLECTION</button>
+          </div>
+          <div class="feedback-msg" id="feedback-4"></div>
+        </div>
+
+        <!-- Hint System -->
+        <div class="hint-container">
+          <div class="hint-header">
+            <span>NEED ASSISTANCE? (Costs -3:00 per hint)</span>
+            <button class="btn-hint" onclick="requestHint(4)">GET TIERED HINT</button>
+          </div>
+          <div class="hint-display" id="hint-display-4"></div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Victory Modal -->
+  <div class="modal-overlay" id="victory-modal">
+    <div class="modal-card">
+      <div class="modal-crown">👑 🕶️ 🥂</div>
+      <h1 class="victory-title">VAULT BREACH REVERSED!</h1>
+      <h3 class="victory-subtitle">THE SOLSTICE COLLECTION IS LIVE ON THE RUNWAY</h3>
+      <p class="victory-message">
+        Congratulations! Your squad successfully mastered <strong>Gemini App Custom Gems</strong> and 
+        <strong>Gemini Notebook (NotebookLM)</strong> to standardize optical taxonomy, eliminate compliance hallucinations, 
+        defuse a viral fit crisis, and orchestrate global inventory allocation under intense pressure.
+      </p>
+
+      <div class="score-summary-grid">
+        <div class="score-card">
+          <div class="score-val" id="score-time-left">--:--</div>
+          <div class="score-lbl">TIME REMAINING</div>
+        </div>
+        <div class="score-card">
+          <div class="score-val" id="score-hints-count">0</div>
+          <div class="score-lbl">HINTS USED</div>
+        </div>
+        <div class="score-card">
+          <div class="score-val" id="score-rank">HAUTE COUTURE PRO</div>
+          <div class="score-lbl">SQUAD RANK</div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="closeVictoryModal()">VIEW MISSION CONTROL</button>
+        <button class="btn-ghost" onclick="resetGame()">PLAY AGAIN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Facilitator Master Key Drawer -->
+  <aside class="facilitator-drawer" id="facilitator-drawer">
+    <div class="drawer-toggle" onclick="toggleFacilitatorDrawer()">⚙️ FACILITATOR OVERRIDE</div>
+    <div class="drawer-content">
+      <h4>FACILITATOR CHEAT SHEET</h4>
+      <ul>
+        <li>Room 1 Key: <code>SOLAR</code></li>
+        <li>Room 2 Key: <code>CAT3-M49</code></li>
+        <li>Room 3 Key: <code>BRIDGEFIT26</code></li>
+        <li>Room 4 Key: <code>MIDNIGHT-LUMINA-2026</code></li>
+      </ul>
+      <div class="drawer-actions">
+        <button onclick="unlockAllRooms()">Unlock All Chambers</button>
+        <button onclick="addFacilitatorTime(15)">+15 Minutes</button>
+      </div>
+    </div>
+  </aside>
+
+  <script src="assets/js/terminal.js"></script>
+</body>
+</html>
