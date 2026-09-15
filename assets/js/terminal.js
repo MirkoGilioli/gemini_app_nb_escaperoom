@@ -1,396 +1,557 @@
 /**
  * MAISON SOLARIS EYEWEAR - MISSION CONTROL ESCAPE ROOM
- * Core Interactive Logic, Audio Synthesis, Timer, Cipher Engine (Hard Mode)
+ * Core Terminal Controller & Cipher Verification Engine
  */
 
-// Master Answers & Alternative Regex Patterns
-const CIPHER_SOLUTIONS = {
-  1: {
-    canonical: 'TITAN-54-18-950',
-    alternatives: ['TITAN-54-18-950TI', 'TITAN5418950', 'TITAN-54-18-950-TI'],
-    check: (input) => {
-      const clean = input.toUpperCase().replace(/[\s]/g, '');
-      return clean === 'TITAN-54-18-950' || 
-             clean === 'TITAN-54-18-950TI' || 
-             clean === 'TITAN5418950' ||
-             clean === 'TITAN-54-18-950-TI';
-    }
-  },
-  2: {
-    canonical: 'ISO14855-DELTA49-CAT3',
-    alternatives: ['ISO14855-DELTA49-CAT3', 'ISO-14855-DELTA-49-CAT-3', 'ISO14855DELTA49CAT3', 'ISO14855-M49-CAT3'],
-    check: (input) => {
-      const clean = input.toUpperCase().replace(/[\s]/g, '');
-      return clean === 'ISO14855-DELTA49-CAT3' ||
-             clean === 'ISO-14855-DELTA-49-CAT-3' ||
-             clean === 'ISO-14855-DELTA-49-CAT3' ||
-             clean === 'ISO14855DELTA49CAT3' ||
-             clean === 'ISO14855-M49-CAT3';
-    }
-  },
-  3: {
-    canonical: 'GUARD-BRIDGEFIT26-PRO',
-    alternatives: ['GUARD-BRIDGEFIT26', 'BRIDGEFIT26', 'GUARDBRIDGEFIT26PRO'],
-    check: (input) => {
-      const clean = input.toUpperCase().replace(/[\s]/g, '');
-      return clean === 'GUARD-BRIDGEFIT26-PRO' ||
-             clean === 'GUARD-BRIDGEFIT26' ||
-             clean === 'BRIDGEFIT26' ||
-             clean === 'GUARDBRIDGEFIT26PRO';
-    }
-  },
-  4: {
-    canonical: 'MIDNIGHT-TOKYO5000-SLIDES-VIDEO',
-    alternatives: ['MIDNIGHT-TOKYO5K-SLIDES-VIDEO', 'MIDNIGHT-TOKYO-5000-SLIDES-VIDEO', 'MIDNIGHT-TOKYO5000', 'MIDNIGHTTOKYO5000SLIDESVIDEO'],
-    check: (input) => {
-      const clean = input.toUpperCase().replace(/[\s]/g, '');
-      return clean.includes('MIDNIGHT') && 
-             (clean.includes('TOKYO5000') || clean.includes('TOKYO5K') || clean.includes('5000')) &&
-             (clean.includes('SLIDE') || clean.includes('VIDEO'));
+// Sound Synthesizer via Web Audio API
+class AudioSynthesizer {
+  constructor() {
+    this.ctx = null;
+    this.enabled = true;
+  }
+
+  init() {
+    if (!this.ctx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) {
+        this.ctx = new AudioContext();
+      }
     }
   }
+
+  playBeep(freq = 800, duration = 0.08, type = 'sine') {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (e) {}
+  }
+
+  playSuccess() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.frequency.setValueAtTime(freq, now + i * 0.1);
+        gain.gain.setValueAtTime(0.1, now + i * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.35);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now + i * 0.1);
+        osc.stop(now + i * 0.1 + 0.35);
+      });
+    } catch (e) {}
+  }
+
+  playError() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.linearRampToValueAtTime(90, now + 0.3);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.3);
+    } catch (e) {}
+  }
+}
+
+const audio = new AudioSynthesizer();
+
+// State variables
+let timerSeconds = 60 * 60; // 60 minutes
+let timerRunning = false;
+let timerInterval = null;
+let penaltyMinutes = 0;
+
+let unlockedChambers = {
+  1: false,
+  2: false,
+  3: false,
+  4: false
 };
 
-// 3-Tiered Hints for Hard Mode
-const ROOM_HINTS = {
+let hintsUsed = {
+  1: 0,
+  2: 0,
+  3: 0,
+  4: 0
+};
+
+// Official Hard Mode Solutions
+const CHAMBER_KEYS = {
+  1: 'TITAN-54-18-950',
+  2: 'ISO14855-DELTA49-CAT3',
+  3: 'GUARD-BRIDGEFIT26-PRO',
+  4: 'MIDNIGHT-TOKYO5000-SLIDES-VIDEO'
+};
+
+// Progressive Hint System (-3 min penalty per tier)
+const CHAMBER_HINTS = {
   1: [
-    "Tier 1 (Nudge): Have you uploaded 'Maison_Solaris_Technical_Blueprints.pdf' into the Gem's Knowledge section and enabled Image Generation (Nano Banana)? Look at Section 3 of the PDF.",
-    "Tier 2 (Clue): The formula is TITAN-[LENS]-[BRIDGE]-[TENSILE]. The lens width is 54mm, bridge is 18mm, and Grade-5 Beta Titanium tensile strength in Section 2 is 950 MPa.",
-    "Tier 3 (Reveal): The Chamber 01 override cipher is: TITAN-54-18-950"
+    "Look at the Raw Spec #881: The boxing dimensions are 'Eye 54' and 'Bridge 18'.",
+    "Open the Technical Blueprints PDF: Grade-5 Beta Titanium Ultimate Tensile Strength is explicitly listed as 950 MPa.",
+    "Assembly Formula: TITAN-[LENS]-[BRIDGE]-[TENSILE] => TITAN-54-18-950"
   ],
   2: [
-    "Tier 1 (Nudge): Generate the Audio Overview podcast in NotebookLM Studio. Listen to the hosts discuss the 115-day composting test and runway lighting standard, then ask targeted questions in NotebookLM chat.",
-    "Tier 2 (Clue): In NotebookLM chat, ask for: 1) ISO standard for biodegradability (ISO 14855), 2) batch code for M49 (DELTA-49), and 3) mandatory runway filter category (CAT3). Formula: [ISO]-[BATCH]-[CAT].",
-    "Tier 3 (Reveal): The Chamber 02 override cipher is: ISO14855-DELTA49-CAT3"
+    "In NotebookLM, run Audio Overview on both sources. The hosts debate the industrial composting standard and runway lighting.",
+    "Forensic query chat: ISO for composting is ISO 14855. Acetate batch is DELTA49. Spotlight filter is Category 3 (CAT3).",
+    "Assembly Formula: [ISO_STANDARD]-[BATCH_CODE]-[FILTER_CAT] => ISO14855-DELTA49-CAT3"
   ],
   3: [
-    "Tier 1 (Nudge): Upload 'Maison_Solaris_Brand_Safety_SOP.pdf' into the Optical Care Guardian Gem. Notice the negative constraint: strictly decline headache prescriptions.",
-    "Tier 2 (Clue): Read Section 3 of the Brand Safety SOP. When de-escalating bridge pinching, the concierge is authorized to issue the VIP resolution voucher code.",
-    "Tier 3 (Reveal): The Chamber 03 override cipher is: GUARD-BRIDGEFIT26-PRO"
+    "Enforce Gem 02 negative constraints: strict refusal of headache medicine / clinical diagnosis. Biocompatibility: ISO 10993-5.",
+    "Examine Brand Safety SOP Section 3: The authorized VIP emergency replacement voucher is for Bridge Fit 2026 Pro.",
+    "Assembly Formula: GUARD-BRIDGEFIT26-PRO"
   ],
   4: [
-    "Tier 1 (Nudge): In NotebookLM Studio, generate both a Slide Deck (Presentation) and a Video Overview. Check allocation_matrix.csv for which city has 7,850 pre-orders and only 2.1% returns.",
-    "Tier 2 (Clue): Tokyo is the Priority Hub receiving 5,000 units. Combine the runway theme (MIDNIGHT), the priority hub units (TOKYO5000), and the NotebookLM Studio deliverables (SLIDES-VIDEO).",
-    "Tier 3 (Reveal): The Master Deployment Cipher is: MIDNIGHT-TOKYO5000-SLIDES-VIDEO"
+    "Reconcile the Allocation Matrix: Milan gets 3,000, New York gets 4,000, Tokyo has highest pre-orders (7,850) and lowest returns (2.1%). Tokyo gets 5,000 units.",
+    "Remember the deliverables required in NotebookLM Studio: Slide Deck (SLIDES) and Video Overview (VIDEO). Theme is MIDNIGHT.",
+    "Assembly Formula: MIDNIGHT-TOKYO5000-SLIDES-VIDEO"
   ]
 };
 
-// State Variables
-let timerSeconds = 60 * 60; // 60 minutes default
-let timerInterval = null;
-let timerRunning = false;
-let unlockedChambers = { 1: false, 2: false, 3: false, 4: false };
-let hintsUsed = { 1: 0, 2: 0, 3: 0, 4: 0 };
-let penaltyMinutes = 0;
-let soundEnabled = true;
+// Document Metadata for Viewer & Tabs
+const DOSSIER_METADATA = {
+  'gem1_prompt': { title: 'Gem 01: Luxury Eyewear Merchandiser (System Prompt)', category: 'Gems', tool: 'Gemini App' },
+  'gem2_prompt': { title: 'Gem 02: Optical Care Guardian (System Prompt)', category: 'Gems', tool: 'Gemini App' },
+  'gem3_prompt': { title: 'Gem 03: Merchandise Allocator (System Prompt)', category: 'Gems', tool: 'Gemini App' },
+  'raw_specs': { title: 'Raw Factory Engineering Notes (Prototype #881)', category: 'Specs', tool: 'Chamber 01' },
+  'source1_mido': { title: 'Source 01: MIDO Eyewear Trend Forecast (2026/2027)', category: 'Sources', tool: 'NotebookLM' },
+  'source2_bioacetate': { title: 'Source 02: Bio-Acetate Composting & UV Audit', category: 'Sources', tool: 'NotebookLM' },
+  'source3_ergonomics': { title: 'Source 03: Optical Fit & Cranial Ergonomics Guide', category: 'Sources', tool: 'NotebookLM' },
+  'source4_sentiment': { title: 'Source 04: Regional Pre-Order Demand & Sentiment', category: 'Sources', tool: 'NotebookLM' },
+  'allocation_csv': { title: 'Master Inventory Allocation Matrix (CSV)', category: 'Data', tool: 'NotebookLM' },
+  'influencer_thread': { title: 'Leaked Influencer DM & Comments (@chloevance_style)', category: 'PR', tool: 'Chamber 03' },
+  'brand_playbook': { title: 'Brand Voice & Escalation Tone Playbook', category: 'PR', tool: 'Chamber 03' },
+  'room1_worksheet': { title: 'Chamber 01 Student Worksheet', category: 'Worksheets', tool: 'Chamber 01' },
+  'room2_tasks': { title: 'Chamber 02 NotebookLM Forensic Tasks', category: 'Worksheets', tool: 'Chamber 02' },
+  'room2_worksheet': { title: 'Chamber 02 Citation Verification Sheet', category: 'Worksheets', tool: 'Chamber 02' },
+  'room3_worksheet': { title: 'Chamber 03 Response Testing Checklist', category: 'Worksheets', tool: 'Chamber 03' },
+  'room4_worksheet': { title: 'Chamber 04 Master Launch Protocol', category: 'Worksheets', tool: 'Chamber 04' },
+  'gems_cheatsheet': { title: 'Quick Reference: Gemini App Custom Gems', category: 'Handouts', tool: 'All' },
+  'notebooklm_guide': { title: 'Quick Reference: Gemini NotebookLM Studio', category: 'Handouts', tool: 'All' },
+  'scorecard': { title: 'Official Squad Scorecard & Honor Roll', category: 'Handouts', tool: 'All' },
+  'pdf_blueprints': { title: 'Maison Solaris Technical Blueprints (PDF)', category: 'PDFs', tool: 'Chamber 01', pdfUrl: 'gem-library/knowledge-pdfs/Maison_Solaris_Technical_Blueprints.pdf' },
+  'pdf_sop': { title: 'Maison Solaris Brand Safety SOP (PDF)', category: 'PDFs', tool: 'Chamber 03', pdfUrl: 'gem-library/knowledge-pdfs/Maison_Solaris_Brand_Safety_SOP.pdf' }
+};
 
-// Web Audio API Synthesizer (No external mp3/wav files required)
-let audioCtx = null;
+let currentActiveDossierKey = 'gem1_prompt';
 
-function initAudio() {
-  if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (AudioContext) {
-      audioCtx = new AudioContext();
-    }
+// ==========================================================================
+// UNIVERSAL BULLETPROOF CLIPBOARD COPY
+// ==========================================================================
+function copyDossier(key, btnElement) {
+  let text = '';
+  if (window.ESCAPE_DOSSIERS && window.ESCAPE_DOSSIERS[key]) {
+    text = window.ESCAPE_DOSSIERS[key];
+  } else if (typeof ESCAPE_DOSSIERS !== 'undefined' && ESCAPE_DOSSIERS[key]) {
+    text = ESCAPE_DOSSIERS[key];
   }
-}
 
-function playSound(type) {
-  if (!soundEnabled) return;
+  if (!text) {
+    showToast(`⚠️ Unable to locate document text for ${key}.`);
+    return;
+  }
+
+  // Provide immediate visual button state feedback
+  if (btnElement && btnElement.innerHTML && btnElement.classList) {
+    const originalContent = btnElement.innerHTML;
+    btnElement.innerHTML = '✅ COPIED!';
+    btnElement.classList.add('btn-copied');
+    setTimeout(() => {
+      btnElement.innerHTML = originalContent;
+      btnElement.classList.remove('btn-copied');
+    }, 2200);
+  }
+
+  audio.playBeep(950, 0.08);
+
+  // Method 1: Universal hidden textarea (works in file://, HTTP, iframe, all modern & older browsers)
+  let copied = false;
   try {
-    initAudio();
-    if (!audioCtx) return;
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-
-    const now = audioCtx.currentTime;
-
-    if (type === 'unlock') {
-      // Elegant crystal chime
-      const osc1 = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-
-      osc1.type = 'sine';
-      osc2.type = 'triangle';
-
-      osc1.frequency.setValueAtTime(587.33, now); // D5
-      osc1.frequency.exponentialRampToValueAtTime(880.00, now + 0.15); // A5
-      osc1.frequency.exponentialRampToValueAtTime(1174.66, now + 0.35); // D6
-
-      osc2.frequency.setValueAtTime(293.66, now);
-      osc2.frequency.exponentialRampToValueAtTime(440.00, now + 0.2);
-
-      gain.gain.setValueAtTime(0.25, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc1.start(now);
-      osc2.start(now);
-      osc1.stop(now + 0.8);
-      osc2.stop(now + 0.8);
-
-    } else if (type === 'error') {
-      // Low dual-tone buzzer
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(130.81, now); // C3
-      osc.frequency.linearRampToValueAtTime(98.00, now + 0.25); // G2
-
-      gain.gain.setValueAtTime(0.3, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.35);
-
-    } else if (type === 'hint') {
-      // Warning penalty blip
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(440, now);
-      osc.frequency.exponentialRampToValueAtTime(220, now + 0.3);
-
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.3);
-
-    } else if (type === 'victory') {
-      // Grand celebratory orchestral chords
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-      notes.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.12);
-        gain.gain.setValueAtTime(0.25, now + idx * 0.12);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 1.2);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now + idx * 0.12);
-        osc.stop(now + idx * 0.12 + 1.2);
-      });
-    }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '0';
+    ta.style.width = '2em';
+    ta.style.height = '2em';
+    ta.style.padding = '0';
+    ta.style.border = 'none';
+    ta.style.outline = 'none';
+    ta.style.boxShadow = 'none';
+    ta.style.background = 'transparent';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, 999999);
+    copied = document.execCommand('copy');
+    document.body.removeChild(ta);
   } catch (err) {
-    console.warn("Web Audio unable to play:", err);
+    copied = false;
+  }
+
+  // Method 2: Async Clipboard API fallback
+  if (!copied && navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(`✅ Copied to clipboard! Ready to paste.`);
+    }).catch(() => {
+      showToast(`⚠️ Press Ctrl+C / Cmd+C to copy.`);
+    });
+    return;
+  }
+
+  if (copied) {
+    showToast(`✅ Copied to clipboard! Ready to paste.`);
+  } else {
+    // If browser strictly blocks background clipboard, open modal
+    openDossierModal(key);
+    showToast(`📋 Opened document in reader. Select and copy!`);
   }
 }
 
-// Timer Functions
-function formatTime(totalSeconds) {
-  const isNegative = totalSeconds < 0;
-  const absSeconds = Math.abs(totalSeconds);
-  const minutes = Math.floor(absSeconds / 60);
-  const seconds = absSeconds % 60;
-  const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  return isNegative ? `-${formatted}` : formatted;
+// Toast Notification
+function showToast(message) {
+  let toast = document.getElementById('toast-notification');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast-notification';
+    toast.className = 'toast-notification';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('toast-show');
+
+  if (window.toastTimeout) clearTimeout(window.toastTimeout);
+  window.toastTimeout = setTimeout(() => {
+    toast.classList.remove('toast-show');
+  }, 3200);
 }
 
+// ==========================================================================
+// IN-WORKSPACE TAB SWITCHING (Brief vs Source vs Worksheet)
+// ==========================================================================
+function switchWsTab(roomNum, tabId, btnElement) {
+  audio.playBeep(650, 0.04);
+  const panel = document.getElementById(`room-panel-${roomNum}`);
+  if (!panel) return;
+
+  // Update tab buttons in this room
+  panel.querySelectorAll('.ws-tab-btn').forEach(btn => btn.classList.remove('active'));
+  if (btnElement) btnElement.classList.add('active');
+
+  // Update tab contents in this room
+  panel.querySelectorAll('.ws-tab-content').forEach(content => content.classList.remove('active'));
+  const targetContent = document.getElementById(`tab-content-${roomNum}-${tabId}`);
+  if (targetContent) targetContent.classList.add('active');
+}
+
+// ==========================================================================
+// MODAL VIEWER SYSTEM
+// ==========================================================================
+function openDossierModal(dossierKey = 'gem1_prompt') {
+  audio.playBeep(700, 0.05);
+  const modal = document.getElementById('dossier-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+  switchDossierTab(dossierKey);
+}
+
+function closeDossierModal() {
+  audio.playBeep(500, 0.05);
+  const modal = document.getElementById('dossier-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+function switchDossierTab(dossierKey) {
+  currentActiveDossierKey = dossierKey;
+
+  // Update active state in sidebar
+  document.querySelectorAll('.dossier-tab-btn').forEach(btn => {
+    if (btn.getAttribute('data-doc') === dossierKey) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  const meta = DOSSIER_METADATA[dossierKey] || { title: dossierKey };
+  const titleEl = document.getElementById('dossier-doc-title');
+  if (titleEl) titleEl.textContent = meta.title;
+
+  const copyBtn = document.getElementById('btn-modal-copy-doc');
+  const pdfBtn = document.getElementById('btn-modal-download-pdf');
+
+  if (meta.pdfUrl) {
+    if (copyBtn) copyBtn.style.display = 'none';
+    if (pdfBtn) {
+      pdfBtn.style.display = 'inline-flex';
+      pdfBtn.href = meta.pdfUrl;
+      pdfBtn.setAttribute('download', meta.pdfUrl.split('/').pop());
+    }
+  } else {
+    if (copyBtn) copyBtn.style.display = 'inline-flex';
+    if (pdfBtn) pdfBtn.style.display = 'none';
+  }
+
+  // Populate content viewer
+  const viewer = document.getElementById('dossier-viewer');
+  if (viewer) {
+    if (meta.pdfUrl) {
+      viewer.innerHTML = `
+        <div style="text-align: center; padding: 50px 20px;">
+          <div style="font-size: 54px; margin-bottom: 16px;">📄</div>
+          <h3 style="color: var(--gold-glow); font-family: var(--font-display); margin-bottom: 12px; font-size: 18px;">${meta.title}</h3>
+          <p style="color: var(--text-muted); max-width: 520px; margin: 0 auto 24px; line-height: 1.6; font-size: 13px;">
+            This is an official binary PDF document used as Knowledge grounding for your Gemini Gem.
+            Download this PDF to your computer, then drag-and-drop it into the <b>Knowledge</b> tab of your Gem in the Gemini App.
+          </p>
+          <a href="${meta.pdfUrl}" download class="btn-shelf-action btn-shelf-pdf" style="font-size: 12px; padding: 12px 24px; display: inline-flex;">
+            📥 Download ${meta.pdfUrl.split('/').pop()}
+          </a>
+        </div>
+      `;
+    } else {
+      const text = (window.ESCAPE_DOSSIERS && window.ESCAPE_DOSSIERS[dossierKey])
+        || (typeof ESCAPE_DOSSIERS !== 'undefined' && ESCAPE_DOSSIERS[dossierKey])
+        || "Document content loading...";
+      viewer.textContent = text;
+    }
+    viewer.scrollTop = 0;
+  }
+}
+
+function copyCurrentModalDoc() {
+  const copyBtn = document.getElementById('btn-modal-copy-doc');
+  copyDossier(currentActiveDossierKey, copyBtn);
+}
+
+// ==========================================================================
+// TIMER & SESSION MANAGEMENT
+// ==========================================================================
 function updateTimerDisplay() {
   const display = document.getElementById('timer-display');
-  if (display) {
-    display.textContent = formatTime(timerSeconds);
-    if (timerSeconds <= 300 && timerSeconds > 0) {
-      display.classList.add('urgent');
-    } else {
-      display.classList.remove('urgent');
-    }
+  if (!display) return;
+
+  const minutes = Math.floor(timerSeconds / 60);
+  const seconds = timerSeconds % 60;
+  display.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+  if (timerSeconds <= 300) {
+    display.classList.add('urgent');
+  } else {
+    display.classList.remove('urgent');
   }
 }
 
 function startTimer() {
   if (timerRunning) return;
+  audio.init();
+  audio.playBeep(880, 0.1);
   timerRunning = true;
-  initAudio();
   const toggleBtn = document.getElementById('btn-timer-toggle');
   if (toggleBtn) {
-    toggleBtn.textContent = '⏸ PAUSE MISSION';
+    toggleBtn.textContent = '⏸ PAUSE';
     toggleBtn.classList.add('btn-running');
   }
 
   timerInterval = setInterval(() => {
-    timerSeconds--;
-    updateTimerDisplay();
+    if (timerSeconds > 0) {
+      timerSeconds--;
+      updateTimerDisplay();
+      if (timerSeconds === 300) audio.playBeep(440, 0.4);
+      if (timerSeconds === 60) audio.playBeep(440, 0.8);
+    } else {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      audio.playError();
+      alert('⚠️ T-MINUS ZERO! RUNWAY DEPLOYMENT WINDOW CLOSED. Request +5 MIN to continue!');
+    }
   }, 1000);
 }
 
 function pauseTimer() {
   if (!timerRunning) return;
-  timerRunning = false;
+  audio.playBeep(440, 0.1);
   clearInterval(timerInterval);
+  timerRunning = false;
   const toggleBtn = document.getElementById('btn-timer-toggle');
   if (toggleBtn) {
-    toggleBtn.textContent = '▶ RESUME MISSION';
+    toggleBtn.textContent = '▶ START';
     toggleBtn.classList.remove('btn-running');
   }
 }
 
-function addTime(minutes) {
+function addTime(minutes = 5) {
+  audio.playBeep(600, 0.08);
   timerSeconds += minutes * 60;
   updateTimerDisplay();
+  showToast(`⏱️ Added +${minutes} minutes to countdown.`);
 }
 
-// Room & Navigation Handlers
+function deductTime(minutes = 3) {
+  penaltyMinutes += minutes;
+  timerSeconds = Math.max(0, timerSeconds - minutes * 60);
+  updateTimerDisplay();
+
+  const penaltyPill = document.getElementById('penalty-log');
+  if (penaltyPill) {
+    const totalHints = Object.values(hintsUsed).reduce((a, b) => a + b, 0);
+    penaltyPill.textContent = `Penalties: -${penaltyMinutes}m (${totalHints} hints)`;
+  }
+}
+
+// ==========================================================================
+// CHAMBER NAVIGATION & VERIFICATION
+// ==========================================================================
 function switchRoom(roomNum) {
-  document.querySelectorAll('.nav-room-btn').forEach(btn => btn.classList.remove('active'));
-  document.querySelectorAll('.room-panel').forEach(panel => panel.classList.remove('active'));
+  audio.playBeep(520, 0.05);
 
-  const navBtn = document.getElementById(`nav-btn-${roomNum}`);
-  const roomPanel = document.getElementById(`room-panel-${roomNum}`);
+  // Update Stepper buttons
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    if (parseInt(btn.getAttribute('data-room'), 10) === roomNum) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
 
-  if (navBtn) navBtn.classList.add('active');
-  if (roomPanel) roomPanel.classList.add('active');
+  // Update Chamber panels
+  document.querySelectorAll('.room-panel').forEach(panel => {
+    panel.classList.remove('active');
+    panel.style.display = 'none';
+  });
 
-  const input = document.getElementById(`cipher-input-${roomNum}`);
-  if (input && !unlockedChambers[roomNum]) {
-    setTimeout(() => input.focus(), 100);
+  const activePanel = document.getElementById(`room-panel-${roomNum}`);
+  if (activePanel) {
+    activePanel.classList.add('active');
+    activePanel.style.display = 'grid';
   }
 }
 
-// Cipher Verification
 function verifyChamber(roomNum) {
-  initAudio();
-  if (unlockedChambers[roomNum]) {
-    showFeedback(roomNum, "Chamber already decrypted and online.", "info");
-    return;
+  audio.init();
+  const input = document.getElementById(`cipher-input-${roomNum}`);
+  const feedback = document.getElementById(`feedback-${roomNum}`);
+  if (!input || !feedback) return;
+
+  const enteredCode = input.value.trim().toUpperCase().replace(/\s+/g, '');
+  const correctCode = CHAMBER_KEYS[roomNum];
+
+  if (!timerRunning && Object.values(unlockedChambers).every(v => !v)) {
+    startTimer();
   }
 
-  const inputEl = document.getElementById(`cipher-input-${roomNum}`);
-  if (!inputEl) return;
-  const userVal = inputEl.value.trim();
-
-  if (!userVal) {
-    showFeedback(roomNum, "Enter a cipher before submitting verification.", "error");
-    playSound('error');
-    return;
-  }
-
-  const solver = CIPHER_SOLUTIONS[roomNum];
-  const isCorrect = solver && solver.check(userVal);
-
-  if (isCorrect) {
+  if (enteredCode === correctCode) {
+    audio.playSuccess();
     unlockedChambers[roomNum] = true;
-    playSound('unlock');
-    showFeedback(roomNum, `ACCESS GRANTED! Chamber ${roomNum} unlocked successfully.`, "success");
+    input.classList.remove('input-error');
+    input.classList.add('input-success');
+    input.disabled = true;
 
-    // Update UI
-    const navStatus = document.getElementById(`nav-status-${roomNum}`);
-    if (navStatus) navStatus.textContent = '🔓';
-    const navBtn = document.getElementById(`nav-btn-${roomNum}`);
-    if (navBtn) navBtn.classList.add('unlocked');
+    feedback.className = 'feedback-msg msg-success';
+    feedback.textContent = `✅ CHAMBER ${roomNum} DECRYPTED! OVERRIDE AUTHORIZED.`;
 
-    inputEl.disabled = true;
-    inputEl.classList.add('input-success');
+    const stepBtn = document.getElementById(`step-btn-${roomNum}`);
+    if (stepBtn) {
+      stepBtn.classList.add('unlocked');
+      const statusIcon = stepBtn.querySelector('.step-status');
+      if (statusIcon) statusIcon.textContent = '🔓';
+    }
 
     updateProgress();
 
-    // Check victory condition
-    if (unlockedChambers[1] && unlockedChambers[2] && unlockedChambers[3] && unlockedChambers[4]) {
-      setTimeout(triggerVictory, 900);
-    } else {
-      // Auto-switch to next chamber
+    // Advance to next room or trigger victory
+    if (roomNum < 4) {
       setTimeout(() => {
-        const nextRoom = roomNum < 4 ? roomNum + 1 : 1;
-        switchRoom(nextRoom);
+        switchRoom(roomNum + 1);
+        showToast(`🔓 Chamber 0${roomNum} cleared! Chamber 0${roomNum + 1} unlocked.`);
       }, 1200);
+    } else {
+      setTimeout(() => triggerVictory(), 1000);
     }
   } else {
-    playSound('error');
-    showFeedback(roomNum, `INVALID CIPHER. Authentication rejected. Check your deductions.`, "error");
-    inputEl.classList.add('input-error');
-    setTimeout(() => inputEl.classList.remove('input-error'), 800);
+    audio.playError();
+    input.classList.add('input-error');
+    setTimeout(() => input.classList.remove('input-error'), 600);
+    feedback.className = 'feedback-msg msg-error';
+    feedback.textContent = `❌ ACCESS DENIED: Invalid override cipher.`;
   }
 }
 
-function showFeedback(roomNum, msg, type) {
-  const el = document.getElementById(`feedback-${roomNum}`);
-  if (!el) return;
-  el.textContent = msg;
-  el.className = `feedback-msg msg-${type}`;
-}
-
-// Hint System with -3:00 Penalty
 function requestHint(roomNum) {
-  initAudio();
-  if (unlockedChambers[roomNum]) {
-    alert(`Chamber ${roomNum} is already solved!`);
+  const currentLevel = hintsUsed[roomNum];
+  const hints = CHAMBER_HINTS[roomNum];
+
+  if (currentLevel >= hints.length) {
+    showToast(`All available hints for Chamber 0${roomNum} have been revealed.`);
     return;
   }
 
-  const currentHintIndex = hintsUsed[roomNum];
-  const hints = ROOM_HINTS[roomNum];
-
-  if (currentHintIndex >= hints.length) {
-    alert("All available hints have already been revealed for this chamber.");
-    return;
-  }
-
-  const confirmed = confirm(`Requesting a hint will deduct 3:00 minutes from your mission clock. Proceed?`);
+  const confirmed = confirm(`Requesting a hint will deduct 3:00 minutes from your runway countdown. Proceed?`);
   if (!confirmed) return;
 
+  audio.playBeep(350, 0.15);
+  deductTime(3);
   hintsUsed[roomNum]++;
-  penaltyMinutes += 3;
-  timerSeconds -= 180;
-  updateTimerDisplay();
-  playSound('hint');
 
-  const penaltyLog = document.getElementById('penalty-log');
-  const totalHints = Object.values(hintsUsed).reduce((a, b) => a + b, 0);
-  if (penaltyLog) {
-    penaltyLog.textContent = `Penalties: -${penaltyMinutes} min (${totalHints} hints used)`;
-  }
-
-  const hintDisplay = document.getElementById(`hint-display-${roomNum}`);
-  if (hintDisplay) {
-    const hintEl = document.createElement('div');
-    hintEl.className = 'hint-card';
-    hintEl.textContent = hints[currentHintIndex];
-    hintDisplay.appendChild(hintEl);
+  const hintText = hints[currentLevel];
+  const display = document.getElementById(`hint-display-${roomNum}`);
+  if (display) {
+    const hintCard = document.createElement('div');
+    hintCard.className = 'hint-card';
+    hintCard.innerHTML = `<strong>TIER ${currentLevel + 1} CLUE:</strong> ${hintText}`;
+    display.appendChild(hintCard);
   }
 }
 
-// Progress Tracker
 function updateProgress() {
-  const unlockedCount = Object.values(unlockedChambers).filter(Boolean).length;
-  const pct = (unlockedCount / 4) * 100;
+  const total = 4;
+  const solved = Object.values(unlockedChambers).filter(Boolean).length;
+  const pct = (solved / total) * 100;
 
-  const bar = document.getElementById('progress-bar-fill');
-  if (bar) bar.style.width = `${pct}%`;
-
-  const txt = document.getElementById('vaults-unlocked-text');
-  if (txt) txt.textContent = `${unlockedCount} / 4 Chambers Unlocked`;
-
-  const pctTxt = document.getElementById('progress-percent-text');
-  if (pctTxt) pctTxt.textContent = `${Math.round(pct)}%`;
+  const headerProgressText = document.getElementById('header-progress-text');
+  if (headerProgressText) {
+    headerProgressText.textContent = `${solved} / ${total} Chambers Decrypted`;
+  }
 }
 
-// Victory Modal
 function triggerVictory() {
-  pauseTimer();
-  playSound('victory');
+  audio.playSuccess();
+  if (timerRunning) pauseTimer();
 
   const modal = document.getElementById('victory-modal');
-  if (modal) modal.classList.add('active');
+  if (!modal) return;
+
+  const minutes = Math.floor(timerSeconds / 60);
+  const seconds = timerSeconds % 60;
+  const timeStr = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
   const scoreTime = document.getElementById('score-time-left');
-  if (scoreTime) scoreTime.textContent = formatTime(timerSeconds);
+  if (scoreTime) scoreTime.textContent = timeStr;
 
   const totalHints = Object.values(hintsUsed).reduce((a, b) => a + b, 0);
   const scoreHints = document.getElementById('score-hints-count');
@@ -398,14 +559,16 @@ function triggerVictory() {
 
   const scoreRank = document.getElementById('score-rank');
   if (scoreRank) {
-    if (timerSeconds >= 1800 && totalHints === 0) {
-      scoreRank.textContent = "GRAND MASTER OPTICAL ALCHEMIST 🌟";
-    } else if (timerSeconds >= 900 && totalHints <= 2) {
-      scoreRank.textContent = "EXECUTIVE RUNWAY DIRECTOR 🕶️";
+    if (timerSeconds > 2400 && totalHints === 0) {
+      scoreRank.textContent = "ALTA MODA GRANDMASTER (DIAMOND)";
+    } else if (timerSeconds > 1200) {
+      scoreRank.textContent = "SENIOR EYEWEAR ARCHITECT (GOLD)";
     } else {
-      scoreRank.textContent = "HAUTE COUTURE SURVIVOR 🥂";
+      scoreRank.textContent = "CERTIFIED OPTICAL MERCHANDISER";
     }
   }
+
+  modal.classList.add('active');
 }
 
 function closeVictoryModal() {
@@ -413,49 +576,24 @@ function closeVictoryModal() {
   if (modal) modal.classList.remove('active');
 }
 
-// Facilitator Drawer
-function toggleFacilitatorDrawer() {
-  const drawer = document.getElementById('facilitator-drawer');
-  if (drawer) drawer.classList.toggle('open');
-}
-
-function unlockAllRooms() {
-  for (let i = 1; i <= 4; i++) {
-    unlockedChambers[i] = true;
-    const navStatus = document.getElementById(`nav-status-${i}`);
-    if (navStatus) navStatus.textContent = '🔓';
-    const navBtn = document.getElementById(`nav-btn-${i}`);
-    if (navBtn) navBtn.classList.add('unlocked');
-    const input = document.getElementById(`cipher-input-${i}`);
-    if (input) {
-      input.value = CIPHER_SOLUTIONS[i].canonical;
-      input.disabled = true;
-    }
-    showFeedback(i, `Facilitator override applied.`, "info");
-  }
-  updateProgress();
-  playSound('unlock');
-}
-
-function addFacilitatorTime(mins) {
-  addTime(mins);
-  alert(`Added ${mins} minutes to the mission clock.`);
-}
-
 function resetGame() {
-  if (!confirm("Are you sure you want to reset the escape room session?")) return;
+  const confirmed = confirm("Are you sure you want to reset the escape room session?");
+  if (!confirmed) return;
+
   clearInterval(timerInterval);
-  timerSeconds = 60 * 60;
   timerRunning = false;
+  timerSeconds = 60 * 60;
   penaltyMinutes = 0;
   unlockedChambers = { 1: false, 2: false, 3: false, 4: false };
   hintsUsed = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
   for (let i = 1; i <= 4; i++) {
-    const navStatus = document.getElementById(`nav-status-${i}`);
-    if (navStatus) navStatus.textContent = '🔒';
-    const navBtn = document.getElementById(`nav-btn-${i}`);
-    if (navBtn) navBtn.classList.remove('unlocked');
+    const stepBtn = document.getElementById(`step-btn-${i}`);
+    if (stepBtn) {
+      stepBtn.classList.remove('unlocked');
+      const statusIcon = stepBtn.querySelector('.step-status');
+      if (statusIcon) statusIcon.textContent = '🔒';
+    }
     const input = document.getElementById(`cipher-input-${i}`);
     if (input) {
       input.value = '';
@@ -468,12 +606,12 @@ function resetGame() {
     if (hintDisp) hintDisp.innerHTML = '';
   }
 
-  const penaltyLog = document.getElementById('penalty-log');
-  if (penaltyLog) penaltyLog.textContent = 'Penalties: 0 min (0 hints used)';
+  const penaltyPill = document.getElementById('penalty-log');
+  if (penaltyPill) penaltyPill.textContent = 'Penalties: 0 min (0 hints)';
 
   const toggleBtn = document.getElementById('btn-timer-toggle');
   if (toggleBtn) {
-    toggleBtn.textContent = '▶ START MISSION';
+    toggleBtn.textContent = '▶ START';
     toggleBtn.classList.remove('btn-running');
   }
 
@@ -483,61 +621,81 @@ function resetGame() {
   switchRoom(1);
 }
 
-// Event Listeners Initialization
+// Facilitator Drawer
+function toggleFacilitatorDrawer() {
+  const drawer = document.getElementById('facilitator-drawer');
+  if (drawer) drawer.classList.toggle('open');
+}
+
+function unlockAllRooms() {
+  for (let i = 1; i <= 4; i++) {
+    const input = document.getElementById(`cipher-input-${i}`);
+    if (input) input.value = CHAMBER_KEYS[i];
+    verifyChamber(i);
+  }
+}
+
+function addFacilitatorTime(mins) {
+  addTime(mins);
+}
+
+// Make all handlers universally accessible on window
+window.copyDossier = copyDossier;
+window.copyCurrentModalDoc = copyCurrentModalDoc;
+window.openDossierModal = openDossierModal;
+window.closeDossierModal = closeDossierModal;
+window.switchDossierTab = switchDossierTab;
+window.switchWsTab = switchWsTab;
+window.switchRoom = switchRoom;
+window.verifyChamber = verifyChamber;
+window.requestHint = requestHint;
+window.startTimer = startTimer;
+window.pauseTimer = pauseTimer;
+window.addTime = addTime;
+window.resetGame = resetGame;
+window.closeVictoryModal = closeVictoryModal;
+window.toggleFacilitatorDrawer = toggleFacilitatorDrawer;
+window.unlockAllRooms = unlockAllRooms;
+window.addFacilitatorTime = addFacilitatorTime;
+
+// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   updateTimerDisplay();
   updateProgress();
 
-  // Timer Toggle
-  const timerBtn = document.getElementById('btn-timer-toggle');
-  if (timerBtn) {
-    timerBtn.addEventListener('click', () => {
-      if (timerRunning) {
-        pauseTimer();
-      } else {
-        startTimer();
-      }
-    });
-  }
-
-  // Add 5 min button
-  const addBtn = document.getElementById('btn-add-time');
-  if (addBtn) {
-    addBtn.addEventListener('click', () => addTime(5));
-  }
-
-  // Sound Toggle
-  const soundBtn = document.getElementById('btn-sound-toggle');
-  if (soundBtn) {
-    soundBtn.addEventListener('click', () => {
-      soundEnabled = !soundEnabled;
-      soundBtn.textContent = soundEnabled ? '🔊 SOUND ON' : '🔇 SOUND OFF';
-    });
-  }
-
-  // Reset Button
-  const resetBtn = document.getElementById('btn-reset-session');
-  if (resetBtn) {
-    resetBtn.addEventListener('click', resetGame);
-  }
-
-  // Room Nav Buttons
-  document.querySelectorAll('.nav-room-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const roomNum = parseInt(btn.getAttribute('data-room'), 10);
-      switchRoom(roomNum);
-    });
-  });
-
-  // Enter key support for cipher inputs
+  // Attach Enter key support to inputs
   for (let i = 1; i <= 4; i++) {
     const input = document.getElementById(`cipher-input-${i}`);
     if (input) {
       input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          verifyChamber(i);
-        }
+        if (e.key === 'Enter') verifyChamber(i);
       });
     }
   }
+
+  // Timer Toggle Click
+  const timerBtn = document.getElementById('btn-timer-toggle');
+  if (timerBtn) {
+    timerBtn.addEventListener('click', () => {
+      if (timerRunning) pauseTimer();
+      else startTimer();
+    });
+  }
+
+  // Add 5 min click
+  const addBtn = document.getElementById('btn-add-time');
+  if (addBtn) addBtn.addEventListener('click', () => addTime(5));
+
+  // Sound toggle click
+  const soundBtn = document.getElementById('btn-sound-toggle');
+  if (soundBtn) {
+    soundBtn.addEventListener('click', () => {
+      audio.enabled = !audio.enabled;
+      soundBtn.textContent = audio.enabled ? '🔊 SOUND ON' : '🔇 SOUND OFF';
+    });
+  }
+
+  // Reset session click
+  const resetBtn = document.getElementById('btn-reset-session');
+  if (resetBtn) resetBtn.addEventListener('click', resetGame);
 });
